@@ -10,7 +10,7 @@ faces = [One, Two, Three, Four, Five, Six]
 -- | Return the numeric value of a Dice
 --
 -- >>> value One
--- 2
+-- 1
 value :: Dice -> Int
 value dice = case elemIndex dice faces of
   Just value -> value + 1

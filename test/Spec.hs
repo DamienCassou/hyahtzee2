@@ -13,4 +13,4 @@ spec_dice = do
     it "specifies an order between elements" $
       sort [Six, Five, Four, Three, Two, One] `shouldBe` faces
     it "can be printed" $
-      map (show) faces `shouldBe` ["One", "Two", "Three", "Four", "Five", "Six"]
+      map show faces `shouldBe` ["One", "Two", "Three", "Four", "Five", "Six"]

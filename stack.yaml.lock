@@ -3,14 +3,7 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
-- completed:
-    hackage: tasty-1.4.0.3@sha256:1c9f86d3a5e6a9e1c63de5b20a70f4103d392f85a23e77a1b401fcff36104c5b,2640
-    pantry-tree:
-      size: 1873
-      sha256: 72846721a18ebc40c232c66d621ad3229e9270c430f06377c88a748568b22112
-  original:
-    hackage: tasty-1.4.0.3
+packages: []
 snapshots:
 - completed:
     size: 534126

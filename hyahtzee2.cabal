@@ -59,5 +59,4 @@ test-suite hyahtzee2-test
     , hyahtzee2
     , tasty
     , tasty-hspec
-    , tasty-hunit
   default-language: Haskell2010

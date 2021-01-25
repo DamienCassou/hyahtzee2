@@ -47,5 +47,4 @@ tests:
     dependencies:
     - hyahtzee2
     - tasty
-    - tasty-hunit
     - tasty-hspec

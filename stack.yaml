@@ -31,8 +31,7 @@ resolver: lts-16.31
 packages:
 - .
 
-extra-deps:
-- tasty-1.4.0.3
+# extra-deps:
 
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as

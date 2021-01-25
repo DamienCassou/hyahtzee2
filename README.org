@@ -1,0 +1,3 @@
+* hyahtzee2
+
+[[https://github.com/DamienCassou/hyahtzee2/actions][file:https://github.com/DamienCassou/hyahtzee2/workflows/test/badge.svg]]

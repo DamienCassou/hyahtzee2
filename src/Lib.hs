@@ -1,6 +1,17 @@
 module Lib where
 
-data Face  = One | Two | Three | Four | Five | Six
+import Data.List (elemIndex)
+
+data Dice = One | Two | Three | Four | Five | Six
   deriving (Eq, Show, Ord)
 
-faces = [One, Two,Three,Four,Five,Six]
+faces = [One, Two, Three, Four, Five, Six]
+
+-- | Return the numeric value of a Dice
+--
+-- >>> value One
+-- 2
+value :: Dice -> Int
+value dice = case elemIndex dice faces of
+  Just value -> value + 1
+  Nothing -> -1 -- should not happen

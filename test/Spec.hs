@@ -2,14 +2,18 @@ import qualified Test.Tasty as Tasty
 import           Test.Tasty.Hspec (shouldBe, describe, it, testSpec)
 import           Data.List (sort)
 import           Test.DocTest as DocTest (doctest)
+import           Control.Exception (catch, throwIO)
+import           System.Exit ( ExitCode(ExitSuccess) )
 
-import Lib
+import Lib ( faces, Dice(One, Six, Five, Four, Three, Two) )
 
 main = do
   tree <- testSpec "Tests" spec_dice
   Tasty.defaultMain tree
-  -- WON'T RUN:
-  doctest ["-isrc", "src/Lib.hs"]
+  `catch` (\e -> do
+              if e == ExitSuccess
+                then doctest ["-isrc", "src/Lib.hs"]
+                else throwIO e)
 
 spec_dice = do
   describe "Face" $ do

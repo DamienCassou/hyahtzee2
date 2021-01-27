@@ -7,7 +7,7 @@ maintainer:          "damien@cassou.me"
 copyright:           "2021 Damien Cassou"
 
 extra-source-files:
-- README.md
+- README.org
 - ChangeLog.md
 
 # Metadata used when publishing your package

@@ -1,8 +1,5 @@
 module Types where
 
-data Dice = One | Two | Three | Four | Five | Six
-  deriving (Eq, Show, Ord)
-
 type Throw = [Int]
 
 data Score =

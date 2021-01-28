@@ -67,7 +67,7 @@ scoreSixes = scoreUpperSection 6 Sixes
 
 -- Lower section
 
--- | Count three-of-a-kind score with provided dices
+-- | Count three-of-a-kind score with provided dice
 --
 -- >>> scoreThreeOfAKind [2, 2, 2, 4, 4]
 -- ThreeOfAKind 14
@@ -84,7 +84,7 @@ scoreThreeOfAKind throw@[d1, d2, d3, d4, d5]
   | d1 == d3 || d2 == d4 || d3 == d5 = ThreeOfAKind $ sum throw
   | otherwise = NoScore
 
--- | Count four-of-a-kind score with provided dices
+-- | Count four-of-a-kind score with provided dice
 --
 -- >>> scoreFourOfAKind [4, 4, 4, 4, 5]
 -- FourOfAKind 21
@@ -101,7 +101,7 @@ scoreFourOfAKind throw@[d1, d2, d3, d4, d5]
   | d1 == d4 || d2 == d5 = FourOfAKind $ sum throw
   | otherwise = NoScore
 
--- | Count full-house score with provided dices
+-- | Count full-house score with provided dice
 --
 -- >>> scoreFullHouse [2, 2, 2, 4, 4]
 -- FullHouse
@@ -124,7 +124,7 @@ scoreFullHouse throw@[d1, d2, d3, d4, d5]
 scoreStraight :: Throw -> [[Int]] -> Bool
 scoreStraight throw = any (`isSubsequenceOf` throw)
 
--- | Count small-straight score with provided dices
+-- | Count small-straight score with provided dice
 --
 -- >>> scoreSmallStraight [2, 3, 4, 4, 5]
 -- SmallStraight
@@ -143,7 +143,7 @@ scoreSmallStraight throw
   | scoreStraight throw [[1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6]] = SmallStraight
   | otherwise = NoScore
 
--- | Count large-straight score with provided dices
+-- | Count large-straight score with provided dice
 --
 -- >>> scoreLargeStraight [1, 2, 3, 4, 5]
 -- LargeStraight
@@ -164,7 +164,7 @@ scoreLargeStraight throw
   | scoreStraight throw [[1, 2, 3, 4, 5], [2, 3, 4, 5, 6]] = LargeStraight
   | otherwise = NoScore
 
--- | Count yahtzee score with provided dices
+-- | Count yahtzee score with provided dice
 --
 -- >>> scoreYahtzee [1, 1, 1, 1, 1]
 -- Yahtzee
@@ -185,7 +185,7 @@ scoreYahtzee [d1, d2, d3, d4, d5]
   | d1 == d5 = Yahtzee
   | otherwise = NoScore
 
--- | Count chance score with provided dices
+-- | Count chance score with provided dice
 --
 -- >>> scoreChance [1, 1, 1, 1, 1]
 -- Chance 5

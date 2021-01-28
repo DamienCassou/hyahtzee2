@@ -39,178 +39,187 @@ fifth values = values !! 4
 
 type Throw = [Int]
 
-type Scoring = [Int] -> Int
+data Score =
+  NoScore
+  -- Upper section
+  | Aces Int | Twos Int | Threes Int | Fours Int | Fives Int | Sixes Int
+  -- Lower section
+  | ThreeOfAKind Int | FourOfAKind Int | FullHouse | SmallStraight | LargeStraight | Yahtzee | Chance Int
+  deriving (Eq, Show)
+
+type Scoring = [Int] -> Score
 
 -- | Upper section Scoring
 --
 -- >>> scoreAces [2, 2, 3, 3, 4]
--- 0
+-- NoScore
 -- >>> scoreAces [1, 1, 1, 3, 4]
--- 3
+-- Aces 3
 -- >>> scoreTwos [2, 2, 2, 5, 6]
--- 6
+-- Twos 6
 -- >>> scoreThrees [3, 3, 3, 3, 4]
--- 12
+-- Threes 12
 -- >>> scoreFours [4, 4, 5, 5, 5]
--- 8
+-- Fours 8
 -- >>> scoreFives [1, 1, 2, 2, 5]
--- 5
+-- Fives 5
 -- >>> scoreSixes [2, 3, 6, 6, 6]
--- 18
-scoreUpperSection :: Int -> Throw -> Int
-scoreUpperSection category values = category * count category values
+-- Sixes 18
+scoreUpperSection :: Int -> (Int -> Score) -> Throw -> Score
+scoreUpperSection category constructor values =
+  if score == 0 then NoScore else constructor score
+  where
+    score = category * count category values
 
 scoreAces :: Scoring
-scoreAces = scoreUpperSection 1
+scoreAces = scoreUpperSection 1 Aces
 
 scoreTwos :: Scoring
-scoreTwos = scoreUpperSection 2
+scoreTwos = scoreUpperSection 2 Twos
 
 scoreThrees :: Scoring
-scoreThrees = scoreUpperSection 3
+scoreThrees = scoreUpperSection 3 Threes
 
 scoreFours :: Scoring
-scoreFours = scoreUpperSection 4
+scoreFours = scoreUpperSection 4 Fours
 
 scoreFives :: Scoring
-scoreFives = scoreUpperSection 5
+scoreFives = scoreUpperSection 5 Fives
 
 scoreSixes :: Scoring
-scoreSixes = scoreUpperSection 6
+scoreSixes = scoreUpperSection 6 Sixes
 
 -- Lower section
 
 -- | Count three-of-a-kind score with provided dices
 --
 -- >>> scoreThreeOfAKind [2, 2, 2, 4, 4]
--- 14
+-- ThreeOfAKind 14
 -- >>> scoreThreeOfAKind [2, 3, 4, 4, 4]
--- 17
+-- ThreeOfAKind 17
 -- >>> scoreThreeOfAKind [1, 4, 4, 4, 5]
--- 18
+-- ThreeOfAKind 18
 -- >>> scoreThreeOfAKind [2, 4, 4, 4, 4]
--- 18
+-- ThreeOfAKind 18
 -- >>> scoreThreeOfAKind [2, 3, 4, 4, 5]
--- 0
+-- NoScore
 scoreThreeOfAKind :: Scoring
 scoreThreeOfAKind throw@[d1, d2, d3, d4, d5]
-  | d1 == d3 || d2 == d4 || d3 == d5 = sum throw
-  | otherwise = 0
+  | d1 == d3 || d2 == d4 || d3 == d5 = ThreeOfAKind $ sum throw
+  | otherwise = NoScore
 
 -- | Count four-of-a-kind score with provided dices
 --
 -- >>> scoreFourOfAKind [4, 4, 4, 4, 5]
--- 21
+-- FourOfAKind 21
 -- >>> scoreFourOfAKind [4, 5, 5, 5, 5]
--- 24
+-- FourOfAKind 24
 -- >>> scoreFourOfAKind [5, 5, 5, 5, 5]
--- 25
+-- FourOfAKind 25
 -- >>> scoreFourOfAKind [2, 3, 4, 4, 5]
--- 0
+-- NoScore
 -- >>> scoreFourOfAKind [2, 2, 2, 4, 4]
--- 0
+-- NoScore
 scoreFourOfAKind :: Scoring
 scoreFourOfAKind throw@[d1, d2, d3, d4, d5]
-  | d1 == d4 || d2 == d5 = sum throw
-  | otherwise = 0
+  | d1 == d4 || d2 == d5 = FourOfAKind $ sum throw
+  | otherwise = NoScore
 
 -- | Count full-house score with provided dices
 --
 -- >>> scoreFullHouse [2, 2, 2, 4, 4]
--- 25
+-- FullHouse
 -- >>> scoreFullHouse [2, 2, 4, 4, 4]
--- 25
+-- FullHouse
 -- >>> scoreFullHouse [2, 3, 4, 4, 5]
--- 0
+-- NoScore
 -- >>> scoreFullHouse [4, 4, 4, 4, 5]
--- 0
+-- NoScore
 -- >>> scoreFullHouse [4, 5, 5, 5, 5]
--- 0
+-- NoScore
 -- >>> scoreFullHouse [5, 5, 5, 5, 5]
--- 0
+-- NoScore
 scoreFullHouse :: Scoring
 scoreFullHouse throw@[d1, d2, d3, d4, d5]
-  | d1 == d3 && d4 == d5 && d1 /= d5 = 25
-  | d1 == d2 && d3 == d5 && d1 /= d5 = 25
-  | otherwise = 0
+  | d1 == d3 && d4 == d5 && d1 /= d5 = FullHouse
+  | d1 == d2 && d3 == d5 && d1 /= d5 = FullHouse
+  | otherwise = NoScore
 
-scoreStraight :: Int -> [[Int]] -> Scoring
-scoreStraight score straights throw
-  | any (`isSubsequenceOf` throw) straights = score
-  | otherwise = 0
+scoreStraight :: Throw -> [[Int]] -> Bool
+scoreStraight throw = any (`isSubsequenceOf` throw)
 
 -- | Count small-straight score with provided dices
 --
 -- >>> scoreSmallStraight [2, 3, 4, 4, 5]
--- 30
+-- SmallStraight
 -- >>> scoreSmallStraight [1, 2, 3, 4, 5]
--- 30
+-- SmallStraight
 -- >>> scoreSmallStraight [1, 2, 3, 4, 6]
--- 30
+-- SmallStraight
 -- >>> scoreSmallStraight [1, 3, 4, 5, 6]
--- 30
+-- SmallStraight
 -- >>> scoreSmallStraight [2, 2, 2, 4, 4]
--- 0
+-- NoScore
 -- >>> scoreSmallStraight [2, 2, 4, 4, 4]
--- 0
+-- NoScore
 scoreSmallStraight :: Scoring
-scoreSmallStraight = scoreStraight 30 straights
-  where
-    straights = [[1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6]]
+scoreSmallStraight throw
+  | scoreStraight throw [[1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6]] = SmallStraight
+  | otherwise = NoScore
 
 -- | Count large-straight score with provided dices
 --
 -- >>> scoreLargeStraight [1, 2, 3, 4, 5]
--- 40
+-- LargeStraight
 -- >>> scoreLargeStraight [2, 3, 4, 5, 6]
--- 40
+-- LargeStraight
 -- >>> scoreLargeStraight [2, 2, 2, 4, 4]
--- 0
+-- NoScore
 -- >>> scoreLargeStraight [2, 2, 4, 4, 4]
--- 0
+-- NoScore
 -- >>> scoreLargeStraight [2, 3, 4, 4, 5]
--- 0
+-- NoScore
 -- >>> scoreLargeStraight [1, 2, 3, 4, 6]
--- 0
+-- NoScore
 -- >>> scoreLargeStraight [1, 3, 4, 5, 6]
--- 0
+-- NoScore
 scoreLargeStraight :: Scoring
-scoreLargeStraight = scoreStraight 40 straights
-  where
-    straights = [[1, 2, 3, 4, 5], [2, 3, 4, 5, 6]]
+scoreLargeStraight throw
+  | scoreStraight throw [[1, 2, 3, 4, 5], [2, 3, 4, 5, 6]] = LargeStraight
+  | otherwise = NoScore
 
 -- | Count yahtzee score with provided dices
 --
 -- >>> scoreYahtzee [1, 1, 1, 1, 1]
--- 50
+-- Yahtzee
 -- >>> scoreYahtzee [2, 3, 4, 5, 6]
--- 0
+-- NoScore
 -- >>> scoreYahtzee [2, 2, 2, 4, 4]
--- 0
+-- NoScore
 -- >>> scoreYahtzee [2, 2, 4, 4, 4]
--- 0
+-- NoScore
 -- >>> scoreYahtzee [2, 3, 4, 4, 5]
--- 0
+-- NoScore
 -- >>> scoreYahtzee [1, 2, 3, 4, 6]
--- 0
+-- NoScore
 -- >>> scoreYahtzee [1, 3, 4, 5, 6]
--- 0
+-- NoScore
 scoreYahtzee :: Scoring
 scoreYahtzee [d1, d2, d3, d4, d5]
-  | d1 == d5 = 50
-  | otherwise = 0
+  | d1 == d5 = Yahtzee
+  | otherwise = NoScore
 
 -- | Count chance score with provided dices
 --
 -- >>> scoreChance [1, 1, 1, 1, 1]
--- 5
+-- Chance 5
 -- >>> scoreChance [2, 3, 4, 5, 6]
--- 20
+-- Chance 20
 -- >>> scoreChance [2, 2, 2, 4, 4]
--- 14
+-- Chance 14
 -- >>> scoreChance [2, 2, 4, 4, 4]
--- 16
+-- Chance 16
 -- >>> scoreChance [2, 3, 4, 4, 5]
--- 18
+-- Chance 18
 scoreChance :: Scoring
-scoreChance = sum
+scoreChance throw = Chance $ sum throw

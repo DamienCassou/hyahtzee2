@@ -24,6 +24,8 @@ dependencies:
 
 library:
   source-dirs: src
+  dependencies:
+  - containers
 
 executables:
   hyahtzee2-exe:

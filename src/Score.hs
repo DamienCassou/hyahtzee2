@@ -2,8 +2,7 @@ module Score where
 
 import Data.List (elemIndex, isSubsequenceOf)
 
-
-import Types (Scoring, Throw, UpperSection)
+import Types (Scoring, Throw)
 import Data.Maybe (fromMaybe)
 
 -- | Returns a count of the number of times the given element occured
@@ -45,19 +44,6 @@ scoreFives = scoreUpperSection 5
 
 scoreSixes :: Scoring
 scoreSixes = scoreUpperSection 6
-
--- | Return the bonus associated with the upper section.
---
--- >>> scoreBonus [Just 3, Just 6, Just 9, Just 12, Just 15, Just 18]
--- 35
--- >>> scoreBonus [Just 1, Just 6, Just 9, Just 12, Just 15, Just 18]
--- 0
--- >>> scoreBonus [Just 5, Just 10, Just 15, Just 20, Just 25, Just 30]
--- 35
-scoreBonus :: UpperSection -> Int
-
-scoreBonus maybes = if countJusts >= 63 then 35 else 0
-  where countJusts = sum $ map (fromMaybe 0) maybes
 
 -- Lower section
 

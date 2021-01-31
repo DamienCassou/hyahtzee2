@@ -1,6 +1,6 @@
 module ScoreCard where
 
-import Data.Map (partitionWithKey, elems, fromList)
+import Data.Map (partitionWithKey, elems, fromList, insert)
 import Data.Maybe (fromMaybe, catMaybes)
 
 
@@ -75,3 +75,10 @@ scoreUpperSection scoreCard = sumUpperBoxes + bonus
 -- 17
 scoreLowerSection :: ScoreCard -> Int
 scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
+
+-- | Return a score card after adding a new score in a box.
+--
+-- >>> writeInBox (UFigure Aces) (Just 3) $ fromList [(LFigure ThreeOfAKind, Just 17)]
+-- fromList [(UFigure Aces,Just 3),(LFigure ThreeOfAKind,Just 17)]
+writeInBox :: Figure -> Box -> ScoreCard -> ScoreCard
+writeInBox = insert

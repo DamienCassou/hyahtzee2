@@ -1,3 +1,3 @@
 module Lib where
 
-foo = 1
+import Score

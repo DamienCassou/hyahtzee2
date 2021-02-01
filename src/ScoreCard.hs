@@ -82,3 +82,15 @@ scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
 -- fromList [(UFigure Aces,Just 3),(LFigure ThreeOfAKind,Just 17)]
 writeInBox :: Figure -> Box -> ScoreCard -> ScoreCard
 writeInBox = insert
+
+-- | List all upper figures
+--
+-- >>> upperFigures
+-- [Aces,Twos,Threes,Fours,Fives,Sixes]
+upperFigures = [minBound .. maxBound] :: [UpperFigure]
+
+-- | List all lower figures
+--
+-- >>> lowerFigures
+-- [ThreeOfAKind,FourOfAKind,SmallStraight,LargeStraight,Yahtzee,Chance]
+lowerFigures = [minBound .. maxBound] :: [LowerFigure]

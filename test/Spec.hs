@@ -11,7 +11,7 @@ main = do
   -- `catch` (\e -> do
   --             if e == ExitSuccess
   --               then
-                doctest ["-isrc", "src/Dice.hs", "src/Score.hs", "src/ScoreCard.hs", "src/Types.hs"]
+                doctest ["-isrc", "src/Dice.hs", "src/Round.hs", "src/Score.hs", "src/ScoreCard.hs", "src/Types.hs"]
                 -- else throwIO e)
 
 -- spec_dice = do

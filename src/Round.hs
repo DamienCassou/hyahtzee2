@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Round (Round, newRound, Round.selectDie, Round.unselectDie, canThrowDice, Round.rethrow) where
+module Round (Round, newRound, Round.selectDie, Round.unselectDie, Round.rethrow) where
 
 import System.Random (StdGen)
 import Text.Printf (printf)

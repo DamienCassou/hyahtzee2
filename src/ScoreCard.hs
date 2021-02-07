@@ -8,7 +8,7 @@ module ScoreCard (newScoreCard,
                   scoreUpperSection, scoreLowerSection,
                   writeInBox) where
 
-import Data.Map (partitionWithKey, elems, insert, Map, empty)
+import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup)
 
 import Types (Figure (UFigure, LFigure),
               UpperFigure, LowerFigure)
@@ -93,10 +93,14 @@ scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
 
 -- | Return a score card after adding a new score in a box.
 --
--- >>> writeInBox (UFigure Aces) (Just 3) $ fromList [(LFigure ThreeOfAKind, Just 17)]
--- fromList [(UFigure Aces,Just 3),(LFigure ThreeOfAKind,Just 17)]
-writeInBox :: Figure -> Box -> ScoreCard -> ScoreCard
-writeInBox = insert
+-- >>> writeInBox (UFigure Aces) 3 $ fromList [(LFigure ThreeOfAKind, Just 17)]
+-- Just (fromList [(UFigure Aces,Just 3),(LFigure ThreeOfAKind,Just 17)])
+-- >>> writeInBox (UFigure Aces) 3 $ fromList [(UFigure Aces, Just 17)]
+-- Nothing
+writeInBox :: Figure -> Int -> ScoreCard -> Maybe ScoreCard
+writeInBox figure value scoreCard = case Data.Map.lookup figure scoreCard of
+  Just _ -> Nothing
+  Nothing -> Just $ insert figure (Just value) scoreCard
 
 -- | List all upper figures
 --

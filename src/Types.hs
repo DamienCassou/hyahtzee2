@@ -1,7 +1,5 @@
 module Types where
 
-import Data.Map
-
 type Throw = [Int]
 type Scoring = Throw -> Int
 
@@ -15,4 +13,3 @@ data Figure = UFigure UpperFigure | LFigure LowerFigure
   deriving (Eq, Show, Ord)
 
 type Box = Maybe Int
-type ScoreCard = Map Figure Box

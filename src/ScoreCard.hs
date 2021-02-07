@@ -1,13 +1,15 @@
 module ScoreCard where
 
-import Data.Map (partitionWithKey, elems, fromList, insert)
+
+import Data.Map (partitionWithKey, elems, fromList, insert, Map)
 import Data.Maybe (fromMaybe, catMaybes)
 
 
-import Types (ScoreCard,
-              Figure (UFigure, LFigure),
+import Types (Figure (UFigure, LFigure),
               UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes),
               LowerFigure(ThreeOfAKind), Box)
+
+type ScoreCard = Map Figure Box
 
 -- | Return 2 half-score cards, with the upper section first.
 --

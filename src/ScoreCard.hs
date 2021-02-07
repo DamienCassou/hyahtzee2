@@ -1,15 +1,28 @@
-module ScoreCard where
+{-# LANGUAGE Safe #-}
 
+module ScoreCard (newScoreCard,
+                  ScoreCard,
+                  upperScoreCard, lowerScoreCard,
+                  upperFigures, lowerFigures,
+                  scoreBonus,
+                  scoreUpperSection, scoreLowerSection,
+                  writeInBox) where
 
-import Data.Map (partitionWithKey, elems, fromList, insert, Map)
-import Data.Maybe (fromMaybe, catMaybes)
-
+import Data.Map (partitionWithKey, elems, insert, Map, empty)
 
 import Types (Figure (UFigure, LFigure),
-              UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes),
-              LowerFigure(ThreeOfAKind), Box)
+              UpperFigure, LowerFigure)
+import Data.Maybe (catMaybes)
 
+-- $setup
+-- >>> import Data.Map (fromList)
+-- >>> import Types (UpperFigure(Aces,Twos,Threes,Fours,Fives,Sixes), LowerFigure(ThreeOfAKind))
+
+type Box = Maybe Int
 type ScoreCard = Map Figure Box
+
+newScoreCard :: ScoreCard
+newScoreCard = empty
 
 -- | Return 2 half-score cards, with the upper section first.
 --
@@ -89,10 +102,12 @@ writeInBox = insert
 --
 -- >>> upperFigures
 -- [Aces,Twos,Threes,Fours,Fives,Sixes]
+upperFigures :: [UpperFigure]
 upperFigures = [minBound .. maxBound] :: [UpperFigure]
 
 -- | List all lower figures
 --
 -- >>> lowerFigures
 -- [ThreeOfAKind,FourOfAKind,SmallStraight,LargeStraight,Yahtzee,Chance]
+lowerFigures :: [LowerFigure]
 lowerFigures = [minBound .. maxBound] :: [LowerFigure]

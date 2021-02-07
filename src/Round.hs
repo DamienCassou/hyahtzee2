@@ -36,11 +36,11 @@ newRound randomGen =
     Round {iteration = 1, dice = dice, randomGen = randomGen'}
 
 -- | Throw all dice but selected ones. `selection` must be a valid
--- subset of `(throw round)`.n
+-- subset of `(throw round)`.
 --
 -- >>> Round.rethrow $ newRound $ mkStdGen 0
 -- [1, 2, 2, 4, 2] (throw 2/3)
 rethrow :: Round -> Round
 rethrow round =
   let (dice', randomGen') = Dice.rethrow (dice round) (randomGen round) in
-  Round { iteration = iteration round + 1, dice = dice', randomGen = randomGen'}
+    Round { iteration = iteration round + 1, dice = dice', randomGen = randomGen'}

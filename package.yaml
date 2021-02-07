@@ -27,6 +27,10 @@ library:
   dependencies:
   - containers
   - random
+  ghc-options:
+  - -Werror
+  - -Wall
+  - -Wcompat
 
 executables:
   hyahtzee2-exe:

@@ -1,9 +1,12 @@
-module Score where
+{-# LANGUAGE Safe #-}
 
-import Data.List (elemIndex, isSubsequenceOf)
+module Score (scoreAces, scoreTwos, scoreThrees, scoreFours, scoreFives, scoreSixes,
+              scoreThreeOfAKind, scoreFourOfAKind, scoreFullHouse, scoreSmallStraight, scoreLargeStraight, scoreYahtzee, scoreChance) where
 
-import Types (Scoring, Throw)
-import Data.Maybe (fromMaybe)
+import Data.List (isSubsequenceOf)
+import Types (Throw)
+
+type Scoring = Throw -> Int
 
 -- | Returns a count of the number of times the given element occured
 -- in the given list.
@@ -11,9 +14,9 @@ import Data.Maybe (fromMaybe)
 -- >>> count 1 [1, 1, 1, 3, 4]
 -- 3
 count :: Eq a => a -> [a] -> Int
-count elem =
+count item =
   foldl
-    (\count each -> if each == elem then count + 1 else count)
+    (\count' each -> if each == item then count' + 1 else count')
     0
 
 -- | Return the score obtained if a throw is written in a line of the
@@ -63,6 +66,7 @@ scoreThreeOfAKind :: Scoring
 scoreThreeOfAKind throw@[d1, d2, d3, d4, d5]
   | d1 == d3 || d2 == d4 || d3 == d5 = sum throw
   | otherwise = 0
+scoreThreeOfAKind _ = 0
 
 -- | Count four-of-a-kind score with provided dice
 --
@@ -77,9 +81,10 @@ scoreThreeOfAKind throw@[d1, d2, d3, d4, d5]
 -- >>> scoreFourOfAKind [2, 2, 2, 4, 4]
 -- 0
 scoreFourOfAKind :: Scoring
-scoreFourOfAKind throw@[d1, d2, d3, d4, d5]
+scoreFourOfAKind throw@[d1, d2, _, d4, d5]
   | d1 == d4 || d2 == d5 = sum throw
   | otherwise = 0
+scoreFourOfAKind _ = 0
 
 -- | Count full-house score with provided dice
 --
@@ -96,10 +101,11 @@ scoreFourOfAKind throw@[d1, d2, d3, d4, d5]
 -- >>> scoreFullHouse [5, 5, 5, 5, 5]
 -- 0
 scoreFullHouse :: Scoring
-scoreFullHouse throw@[d1, d2, d3, d4, d5]
+scoreFullHouse [d1, d2, d3, d4, d5]
   | d1 == d3 && d4 == d5 && d1 /= d5 = 25
   | d1 == d2 && d3 == d5 && d1 /= d5 = 25
   | otherwise = 0
+scoreFullHouse _ = 0
 
 scoreStraight :: Throw -> [[Int]] -> Bool
 scoreStraight throw = any (`isSubsequenceOf` throw)
@@ -161,9 +167,10 @@ scoreLargeStraight throw
 -- >>> scoreYahtzee [1, 3, 4, 5, 6]
 -- 0
 scoreYahtzee :: Scoring
-scoreYahtzee [d1, d2, d3, d4, d5]
+scoreYahtzee [d1, _, _, _, d5]
   | d1 == d5 = 50
   | otherwise = 0
+scoreYahtzee _ = 0
 
 -- | Count chance score with provided dice
 --

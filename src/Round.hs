@@ -1,9 +1,15 @@
-module Round where
+{-# LANGUAGE Safe #-}
 
-import Types (Throw)
-import System.Random (StdGen, mkStdGen, randomR)
+module Round (Round, newRound, Round.selectDie, Round.unselectDie, canThrowDice, Round.rethrow) where
+
+import System.Random (StdGen)
 import Text.Printf (printf)
-import Dice (Dice (Dice, others, selection), rethrow, throwDice, selectDie, unselectDie)
+
+import Dice (Dice, rethrow, throwDice, selectDie, unselectDie)
+
+-- $setup
+-- >>> import System.Random (mkStdGen)
+-- >>> import Dice (Dice(Dice, others, selection))
 
 data Round = Round {
   -- The number of times the user threw the dice (from 1 to 3)
@@ -19,24 +25,24 @@ data Round = Round {
 -- >>> Round { iteration = 2, dice = fst (throwDice (mkStdGen 0)), randomGen = mkStdGen 0 }
 -- [5, 1, 4, 6, 6] (throw 2/3)
 instance Show Round where
-  show round = printf "%s (throw %d/3)" (show (dice round)) (iteration round)
+  show round' = printf "%s (throw %d/3)" (show (dice round')) (iteration round')
 
 setDice :: Round -> Dice -> Round
-setDice round dice' = Round { iteration = iteration round, dice = dice', randomGen = randomGen round}
+setDice round' dice' = Round { iteration = iteration round', dice = dice', randomGen = randomGen round'}
 
 -- | Return true iff the round is not at its 3rd iteration yet
 --
 canThrowDice :: Round -> Bool
-canThrowDice round = iteration round < 3
+canThrowDice round' = iteration round' < 3
 
 -- | Create a new instance of Round, iteration at 1 and random dice
 --
 -- >>> newRound $ mkStdGen 0
 -- [5, 1, 4, 6, 6] (throw 1/3)
 newRound :: StdGen -> Round
-newRound randomGen =
-  let (dice, randomGen') = throwDice randomGen in
-    Round {iteration = 1, dice = dice, randomGen = randomGen'}
+newRound randomGen' =
+  let (dice', randomGen'') = throwDice randomGen' in
+    Round {iteration = 1, dice = dice', randomGen = randomGen''}
 
 -- | Throw all dice but selected ones. `selection` must be a valid
 -- subset of `(throw round)`.
@@ -44,9 +50,9 @@ newRound randomGen =
 -- >>> Round.rethrow $ newRound $ mkStdGen 0
 -- [1, 2, 2, 4, 2] (throw 2/3)
 rethrow :: Round -> Round
-rethrow round =
-  let (dice', randomGen') = Dice.rethrow (dice round) (randomGen round) in
-    Round { iteration = iteration round + 1, dice = dice', randomGen = randomGen'}
+rethrow round' =
+  let (dice', randomGen') = Dice.rethrow (dice round') (randomGen round') in
+    Round { iteration = iteration round' + 1, dice = dice', randomGen = randomGen'}
 
 -- | Select one of the non-selected dice matching the given
 -- value. Return `Nothing` if the value is not matching any
@@ -57,8 +63,8 @@ rethrow round =
 -- >>> Round.selectDie (newRound $ mkStdGen 0) 3
 -- Nothing
 selectDie :: Round -> Int -> Maybe Round
-selectDie round value = case Dice.selectDie (dice round) value of
-  Just dice' -> Just $ setDice round dice'
+selectDie round' value = case Dice.selectDie (dice round') value of
+  Just dice' -> Just $ setDice round' dice'
   Nothing    -> Nothing
 
 -- | Unselect one of the selected dice matching the given
@@ -70,6 +76,6 @@ selectDie round value = case Dice.selectDie (dice round) value of
 -- >>> Round.unselectDie (Round {iteration = 1, dice = Dice { others = [1, 2], selection = [3, 4, 5]}, randomGen = mkStdGen 0}) 1
 -- Nothing
 unselectDie :: Round -> Int -> Maybe Round
-unselectDie round value = case Dice.unselectDie (dice round) value of
-  Just dice' -> Just $ setDice round dice'
+unselectDie round' value = case Dice.unselectDie (dice round') value of
+  Just dice' -> Just $ setDice round' dice'
   Nothing    -> Nothing

@@ -1,11 +1,13 @@
-module Dice where
+{-# LANGUAGE Safe #-}
 
-import Types (Throw)
-import Text.Printf (printf)
-import System.Random (StdGen, Random (randomR), mkStdGen)
+module Dice (Dice(Dice, others, selection), throwDice, rethrow, selectDie, unselectDie) where
+
 import Data.List (delete)
+import System.Random (StdGen, Random (randomR))
+import Text.Printf (printf)
 
-type Selection = [Int]
+-- $setup
+-- >>> import System.Random(mkStdGen)
 
 data Dice = Dice {
   selection :: [Int]
@@ -27,10 +29,9 @@ instance Show Dice where
                   others' = showArrayElements (printf "%d") (others dice)
               in case (length selectedDices, length others') of
                    (0, 0) -> "[]"
-                   (0, x) -> "[" ++ others' ++ "]"
-                   (x, 0) -> "[" ++ selectedDices ++ "]"
-                   (x, y) -> "[" ++ selectedDices ++ ", " ++ others' ++ "]"
-
+                   (0, _) -> "[" ++ others' ++ "]"
+                   (_, 0) -> "[" ++ selectedDices ++ "]"
+                   (_, _) -> "[" ++ selectedDices ++ ", " ++ others' ++ "]"
 
 -- | Return a string representing the elements of a list, comma separated.
 --

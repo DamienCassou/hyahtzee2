@@ -3,7 +3,7 @@ module Round where
 import Types (Throw)
 import System.Random (StdGen, mkStdGen, randomR)
 import Text.Printf (printf)
-import Dice (Dice, rethrow, throwDice)
+import Dice (Dice (Dice, others, selection), rethrow, throwDice, selectDie, unselectDie)
 
 data Round = Round {
   -- The number of times the user threw the dice (from 1 to 3)
@@ -20,6 +20,9 @@ data Round = Round {
 -- [5, 1, 4, 6, 6] (throw 2/3)
 instance Show Round where
   show round = printf "%s (throw %d/3)" (show (dice round)) (iteration round)
+
+setDice :: Round -> Dice -> Round
+setDice round dice' = Round { iteration = iteration round, dice = dice', randomGen = randomGen round}
 
 -- | Return true iff the round is not at its 3rd iteration yet
 --
@@ -44,3 +47,29 @@ rethrow :: Round -> Round
 rethrow round =
   let (dice', randomGen') = Dice.rethrow (dice round) (randomGen round) in
     Round { iteration = iteration round + 1, dice = dice', randomGen = randomGen'}
+
+-- | Select one of the non-selected dice matching the given
+-- value. Return `Nothing` if the value is not matching any
+-- non-selected dice.
+--
+-- >>> Round.selectDie (newRound $ mkStdGen 0) 1
+-- Just [[1], 5, 4, 6, 6] (throw 1/3)
+-- >>> Round.selectDie (newRound $ mkStdGen 0) 3
+-- Nothing
+selectDie :: Round -> Int -> Maybe Round
+selectDie round value = case Dice.selectDie (dice round) value of
+  Just dice' -> Just $ setDice round dice'
+  Nothing    -> Nothing
+
+-- | Unselect one of the selected dice matching the given
+-- value. Return `Nothing` if the value is not matching any
+-- selected dice.
+--
+-- >>> Round.unselectDie (Round {iteration = 1, dice = Dice { others = [1, 2], selection = [3, 4, 5]}, randomGen = mkStdGen 0}) 3
+-- Just [[4], [5], 3, 1, 2] (throw 1/3)
+-- >>> Round.unselectDie (Round {iteration = 1, dice = Dice { others = [1, 2], selection = [3, 4, 5]}, randomGen = mkStdGen 0}) 1
+-- Nothing
+unselectDie :: Round -> Int -> Maybe Round
+unselectDie round value = case Dice.unselectDie (dice round) value of
+  Just dice' -> Just $ setDice round dice'
+  Nothing    -> Nothing

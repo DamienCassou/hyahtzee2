@@ -3,12 +3,11 @@
 module ScoreCard (newScoreCard,
                   ScoreCard,
                   upperScoreCard, lowerScoreCard,
-                  upperFigures, lowerFigures,
-                  scoreBonus,
+                  scoreBonus, isFinished,
                   scoreUpperSection, scoreLowerSection,
                   writeInBox) where
 
-import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup)
+import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup, member)
 
 import Types (Figure (UFigure, LFigure),
               UpperFigure, LowerFigure)
@@ -115,3 +114,21 @@ upperFigures = [minBound .. maxBound] :: [UpperFigure]
 -- [ThreeOfAKind,FourOfAKind,SmallStraight,LargeStraight,Yahtzee,Chance]
 lowerFigures :: [LowerFigure]
 lowerFigures = [minBound .. maxBound] :: [LowerFigure]
+
+-- | List all upper and lower figures.
+allFigures :: [Figure]
+allFigures = map UFigure upperFigures ++ map LFigure lowerFigures
+
+-- | Return true iff the score card contains a value for the figure.
+--
+-- >>> hasValue (fromList [(UFigure Aces, Just 3)]) (UFigure Aces)
+-- True
+-- >>> hasValue (fromList [(UFigure Aces, Just 3)]) (UFigure Twos)
+-- False
+hasValue :: ScoreCard -> Figure -> Bool
+hasValue scoreCard figure = member figure scoreCard
+
+-- | Return true iff all figures have been written to in the score card.
+--
+isFinished :: ScoreCard -> Bool
+isFinished scoreCard = all (hasValue scoreCard) allFigures

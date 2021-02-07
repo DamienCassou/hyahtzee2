@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Round (Round, newRound, Round.selectDie, Round.unselectDie, canThrowDice, Round.rethrow) where
+module Round (Round, newRound, Round.selectDie, Round.unselectDie, Round.rethrow) where
 
 import System.Random (StdGen)
 import Text.Printf (printf)
@@ -44,15 +44,19 @@ newRound randomGen' =
   let (dice', randomGen'') = throwDice randomGen' in
     Round {iteration = 1, dice = dice', randomGen = randomGen''}
 
--- | Throw all dice but selected ones. `selection` must be a valid
--- subset of `(throw round)`.
+-- | Throw all dice but selected ones. Returns `Nothing` if round is
+-- at iteration 3 already.
 --
 -- >>> Round.rethrow $ newRound $ mkStdGen 0
--- [1, 2, 2, 4, 2] (throw 2/3)
-rethrow :: Round -> Round
-rethrow round' =
-  let (dice', randomGen') = Dice.rethrow (dice round') (randomGen round') in
-    Round { iteration = iteration round' + 1, dice = dice', randomGen = randomGen'}
+-- Just [1, 2, 2, 4, 2] (throw 2/3)
+-- >>> Round.rethrow (Round { iteration = 3, dice = Dice { others = [1, 2], selection = [3, 4, 5]}, randomGen = mkStdGen 0})
+-- Nothing
+rethrow :: Round -> Maybe Round
+rethrow round'
+  | not (canThrowDice round') = Nothing
+  | otherwise =
+    let (dice', randomGen') = Dice.rethrow (dice round') (randomGen round') in
+      Just $ Round { iteration = iteration round' + 1, dice = dice', randomGen = randomGen'}
 
 -- | Select one of the non-selected dice matching the given
 -- value. Return `Nothing` if the value is not matching any

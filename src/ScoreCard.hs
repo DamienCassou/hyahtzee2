@@ -3,12 +3,11 @@
 module ScoreCard (newScoreCard,
                   ScoreCard,
                   upperScoreCard, lowerScoreCard,
-                  upperFigures, lowerFigures,
-                  scoreBonus,
+                  scoreBonus, isFinished,
                   scoreUpperSection, scoreLowerSection,
                   writeInBox) where
 
-import Data.Map (partitionWithKey, elems, insert, Map, empty)
+import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup, member)
 
 import Types (Figure (UFigure, LFigure),
               UpperFigure, LowerFigure)
@@ -93,10 +92,14 @@ scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
 
 -- | Return a score card after adding a new score in a box.
 --
--- >>> writeInBox (UFigure Aces) (Just 3) $ fromList [(LFigure ThreeOfAKind, Just 17)]
--- fromList [(UFigure Aces,Just 3),(LFigure ThreeOfAKind,Just 17)]
-writeInBox :: Figure -> Box -> ScoreCard -> ScoreCard
-writeInBox = insert
+-- >>> writeInBox (UFigure Aces) 3 $ fromList [(LFigure ThreeOfAKind, Just 17)]
+-- Just (fromList [(UFigure Aces,Just 3),(LFigure ThreeOfAKind,Just 17)])
+-- >>> writeInBox (UFigure Aces) 3 $ fromList [(UFigure Aces, Just 17)]
+-- Nothing
+writeInBox :: Figure -> Int -> ScoreCard -> Maybe ScoreCard
+writeInBox figure value scoreCard = case Data.Map.lookup figure scoreCard of
+  Just _ -> Nothing
+  Nothing -> Just $ insert figure (Just value) scoreCard
 
 -- | List all upper figures
 --
@@ -111,3 +114,21 @@ upperFigures = [minBound .. maxBound] :: [UpperFigure]
 -- [ThreeOfAKind,FourOfAKind,SmallStraight,LargeStraight,Yahtzee,Chance]
 lowerFigures :: [LowerFigure]
 lowerFigures = [minBound .. maxBound] :: [LowerFigure]
+
+-- | List all upper and lower figures.
+allFigures :: [Figure]
+allFigures = map UFigure upperFigures ++ map LFigure lowerFigures
+
+-- | Return true iff the score card contains a value for the figure.
+--
+-- >>> hasValue (fromList [(UFigure Aces, Just 3)]) (UFigure Aces)
+-- True
+-- >>> hasValue (fromList [(UFigure Aces, Just 3)]) (UFigure Twos)
+-- False
+hasValue :: ScoreCard -> Figure -> Bool
+hasValue scoreCard figure = member figure scoreCard
+
+-- | Return true iff all figures have been written to in the score card.
+--
+isFinished :: ScoreCard -> Bool
+isFinished scoreCard = all (hasValue scoreCard) allFigures

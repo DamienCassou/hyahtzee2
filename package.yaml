@@ -28,6 +28,7 @@ library:
   - containers
   - random
   ghc-options:
+  - -XSafe
   - -Werror
   - -Wall
   - -Wcompat

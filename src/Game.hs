@@ -9,6 +9,7 @@ import ScoreCard (ScoreCard, newScoreCard, writeInBox, isFinished)
 import Types (Figure)
 
 data Game = Game { round :: Round, scoreCard :: ScoreCard }
+  deriving Show
 
 newGame :: StdGen -> Game
 newGame randomGen = Game { Game.round = newRound randomGen,

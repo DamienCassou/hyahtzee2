@@ -1,6 +1,8 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DerivingStrategies #-}
 
+-- TODO : rename this file to Figure.hs
+
 module Types (UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
              , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
              , Figure(UFigure, LFigure)) where

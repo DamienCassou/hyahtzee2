@@ -111,7 +111,7 @@ upperFigures = [minBound .. maxBound] :: [UpperFigure]
 -- | List all lower figures
 --
 -- >>> lowerFigures
--- [ThreeOfAKind,FourOfAKind,SmallStraight,LargeStraight,Yahtzee,Chance]
+-- [ThreeOfAKind,FourOfAKind,FullHouse,SmallStraight,LargeStraight,Yahtzee,Chance]
 lowerFigures :: [LowerFigure]
 lowerFigures = [minBound .. maxBound] :: [LowerFigure]
 

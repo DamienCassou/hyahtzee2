@@ -1,12 +1,9 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DerivingStrategies #-}
 
-module Types (Throw
-             , UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
+module Types (UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
              , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
              , Figure(UFigure, LFigure)) where
-
-type Throw = [Int]
 
 data UpperFigure = Aces | Twos | Threes | Fours | Fives | Sixes
   deriving stock (Eq, Show, Ord, Enum, Bounded)

@@ -4,8 +4,8 @@ module Score (scoreAces, scoreTwos, scoreThrees, scoreFours, scoreFives, scoreSi
               scoreThreeOfAKind, scoreFourOfAKind, scoreFullHouse, scoreSmallStraight, scoreLargeStraight, scoreYahtzee, scoreChance) where
 
 import Data.List (isSubsequenceOf)
-import Types (Throw)
 
+type Throw = [Int]
 type Scoring = Throw -> Int
 
 -- | Returns a count of the number of times the given element occured

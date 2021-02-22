@@ -43,6 +43,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - hyahtzee2
+    - random
 
 tests:
   hyahtzee2-test:

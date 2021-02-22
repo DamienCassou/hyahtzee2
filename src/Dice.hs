@@ -1,8 +1,8 @@
 {-# LANGUAGE Safe #-}
 
-module Dice (Dice(Dice, others, selection), throwDice, rethrow, selectDie, unselectDie) where
+module Dice (Dice(Dice, others, selection), throwDice, rethrow, selectDie, unselectDie, values) where
 
-import Data.List (delete)
+import Data.List (delete,sort)
 import System.Random (StdGen, Random (randomR))
 import Text.Printf (printf)
 
@@ -44,8 +44,8 @@ showArrayElements _ [] = ""
 
 throwDice :: StdGen -> (Dice, StdGen)
 throwDice randomGen =
-  let (values, randomGen') = generateRandomValues 5 randomGen in
-    (Dice { selection = [], others = values }, randomGen')
+  let (values', randomGen') = generateRandomValues 5 randomGen in
+    (Dice { selection = [], others = values' }, randomGen')
 
 -- | Throw non-selected dice.
 --
@@ -54,9 +54,9 @@ throwDice randomGen =
 rethrow :: Dice -> StdGen -> (Dice, StdGen)
 rethrow dice randomGen =
   let amountToThrow = 5 - length (selection dice)
-      (values, randomGen') = generateRandomValues amountToThrow randomGen
+      (values', randomGen') = generateRandomValues amountToThrow randomGen
   in
-    (Dice {selection = selection dice, others = values}, randomGen')
+    (Dice {selection = selection dice, others = values'}, randomGen')
 
 -- TODO: use a State monad
 -- (https://en.wikibooks.org/wiki/Haskell/Understanding_monads/State#Pseudo-Random_Numbers)
@@ -124,3 +124,10 @@ unselectDie :: Dice -> Int -> Maybe Dice
 unselectDie dice value
   | canUnselectDie dice value = Just $ Dice { selection = delete value (selection dice), others = value:others dice }
   | otherwise = Nothing
+
+-- | Return a sorted list of the value of all dice regardless of selection.
+--
+-- >>> values $ Dice { others = [1,2], selection = [5,5,6]}
+-- [1,2,5,5,6]
+values :: Dice -> [Int]
+values dice = sort $ selection dice ++ others dice

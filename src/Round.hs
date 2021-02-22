@@ -1,11 +1,11 @@
 {-# LANGUAGE Safe #-}
 
-module Round (Round, newRound, Round.selectDie, Round.unselectDie, Round.rethrow) where
+module Round (Round, newRound, Round.selectDie, Round.unselectDie, Round.rethrow, Round.values,renewRound) where
 
 import System.Random (StdGen)
 import Text.Printf (printf)
 
-import Dice (Dice, rethrow, throwDice, selectDie, unselectDie)
+import Dice (Dice, rethrow, throwDice, selectDie, unselectDie, values)
 
 -- $setup
 -- >>> import System.Random (mkStdGen)
@@ -43,6 +43,9 @@ newRound :: StdGen -> Round
 newRound randomGen' =
   let (dice', randomGen'') = throwDice randomGen' in
     Round {iteration = 1, dice = dice', randomGen = randomGen''}
+
+renewRound :: Round -> Round
+renewRound round' = newRound (randomGen round')
 
 -- | Throw all dice but selected ones. Returns `Nothing` if round is
 -- at iteration 3 already.
@@ -83,3 +86,6 @@ unselectDie :: Round -> Int -> Maybe Round
 unselectDie round' value = case Dice.unselectDie (dice round') value of
   Just dice' -> Just $ setDice round' dice'
   Nothing    -> Nothing
+
+values :: Round -> [Int]
+values round' = Dice.values (dice round')

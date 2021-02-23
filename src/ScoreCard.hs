@@ -2,6 +2,7 @@
 
 module ScoreCard (newScoreCard,
                   ScoreCard,
+                  value,
                   allFigures,
                   upperFigures, lowerFigures,
                   upperScoreCard, lowerScoreCard,
@@ -9,7 +10,7 @@ module ScoreCard (newScoreCard,
                   scoreUpperSection, scoreLowerSection,
                   writeInBox) where
 
-import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup, member)
+import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup, member, (!?))
 
 import Types (Figure (UFigure, LFigure),
               UpperFigure, LowerFigure)
@@ -97,9 +98,9 @@ scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
 -- >>> writeInBox (UFigure Aces) 3 $ fromList [(UFigure Aces, 17)]
 -- Nothing
 writeInBox :: Figure -> Int -> ScoreCard -> Maybe ScoreCard
-writeInBox figure value scoreCard = case Data.Map.lookup figure scoreCard of
+writeInBox figure value' scoreCard = case Data.Map.lookup figure scoreCard of
   Just _ -> Nothing
-  Nothing -> Just $ insert figure value scoreCard
+  Nothing -> Just $ insert figure value' scoreCard
 
 -- | List all upper figures
 --
@@ -127,6 +128,15 @@ allFigures = map UFigure upperFigures ++ map LFigure lowerFigures
 -- False
 hasValue :: ScoreCard -> Figure -> Bool
 hasValue scoreCard figure = member figure scoreCard
+
+-- | Return the value associated with a figure or Nothing.
+--
+-- >>> value (fromList [(UFigure Aces, 3)]) (UFigure Aces)
+-- Just 3
+-- >>> value (fromList [(UFigure Aces, 3)]) (UFigure Twos)
+-- Nothing
+value :: ScoreCard -> Figure -> Maybe Int
+value scoreCard figure = scoreCard !? figure
 
 -- | Return true iff all figures have been written to in the score card.
 --

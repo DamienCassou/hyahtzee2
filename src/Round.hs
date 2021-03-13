@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Round (Round, newRound, Round.selectDie, Round.unselectDie, Round.rethrow, Round.values,renewRound) where
+module Round (Round, newRound, showIteration, showDice, Round.selectDie, Round.unselectDie, Round.rethrow, Round.values,renewRound) where
 
 import System.Random (StdGen)
 import Text.Printf (printf)
@@ -20,12 +20,21 @@ data Round = Round {
   , randomGen :: StdGen
   }
 
+maxIteration :: Int
+maxIteration = 3
+
 -- | Distlay a round
 --
 -- >>> Round { iteration = 2, dice = fst (throwDice (mkStdGen 0)), randomGen = mkStdGen 0 }
 -- [5, 1, 4, 6, 6] (throw 2/3)
 instance Show Round where
-  show round' = printf "%s (throw %d/3)" (show (dice round')) (iteration round')
+  show round' = printf "%s %s" (showDice round') (showIteration round')
+
+showDice :: Round -> String
+showDice round' = show (dice round')
+
+showIteration :: Round -> String
+showIteration round' = printf "(throw %d/%d)" (iteration round') maxIteration
 
 setDice :: Round -> Dice -> Round
 setDice round' dice' = Round { iteration = iteration round', dice = dice', randomGen = randomGen round'}
@@ -33,7 +42,7 @@ setDice round' dice' = Round { iteration = iteration round', dice = dice', rando
 -- | Return true iff the round is not at its 3rd iteration yet
 --
 canThrowDice :: Round -> Bool
-canThrowDice round' = iteration round' < 3
+canThrowDice round' = iteration round' < maxIteration
 
 -- | Create a new instance of Round, iteration at 1 and random dice
 --

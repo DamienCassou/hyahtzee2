@@ -1,13 +1,14 @@
 {-# LANGUAGE Safe #-}
 
-module Game (newGame, Game.selectDie, Game.selectDice, Game.unselectDie, Game.rethrow, Game.writeInBox, Game.isFinished) where
+module Game (Game, newGame, scoreCard, Game.round, Game.selectDie, Game.selectDice, Game.unselectDie, Game.rethrow, Game.writeInBox, Game.isFinished, Game.setDice, Game.dice, Game.canThrowDice) where
 
 import System.Random (StdGen)
 
-import Round (Round, newRound, renewRound, selectDie, unselectDie, rethrow, values)
+import Round (Round, newRound, renewRound, selectDie, unselectDie, rethrow, values, setDice, dice, canThrowDice)
 import ScoreCard (ScoreCard, newScoreCard, writeInBox, isFinished)
 import Types (Figure)
 import Score (score)
+import Dice (Dice)
 
 data Game = Game { round :: Round, scoreCard :: ScoreCard }
   deriving Show
@@ -19,6 +20,16 @@ newGame randomGen = Game { Game.round = newRound randomGen,
 -- | Return a new game by copying the one passed as parameter and changing its round.
 setRound :: Game -> Round -> Game
 setRound game round' = Game { Game.round = round', scoreCard = scoreCard game}
+
+-- | Return a new game by copying the one passed as parameter and changing its dice.
+setDice :: Game -> Dice -> Game
+setDice game dice' = Game { Game.round = Round.setDice (Game.round game) dice', scoreCard = scoreCard game}
+
+dice :: Game -> Dice
+dice game = Round.dice $ Game.round game
+
+canThrowDice :: Game -> Bool
+canThrowDice game = Round.canThrowDice $ Game.round game
 
 -- | Return a new game by copying the one passed as parameter and changing its score card.
 -- setScoreCard :: Game -> ScoreCard -> Game

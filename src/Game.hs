@@ -1,10 +1,10 @@
 {-# LANGUAGE Safe #-}
 
-module Game (Game, newGame, scoreCard, Game.round, Game.selectDie, Game.selectDice, Game.unselectDie, Game.rethrow, Game.writeInBox, Game.isFinished, Game.setDice, Game.dice, Game.canThrowDice) where
+module Game (Game, newGame, scoreCard, Game.round, Game.toggleDie, Game.rethrow, Game.writeInBox, Game.isFinished, Game.setDice, Game.dice, Game.canThrowDice) where
 
 import System.Random (StdGen)
 
-import Round (Round, newRound, renewRound, selectDie, unselectDie, rethrow, values, setDice, dice, canThrowDice)
+import Round (Round, newRound, renewRound, toggleDie, rethrow, values, setDice, dice, canThrowDice)
 import ScoreCard (ScoreCard, newScoreCard, writeInBox, isFinished)
 import Types (Figure)
 import Score (score)
@@ -35,27 +35,9 @@ canThrowDice game = Round.canThrowDice $ Game.round game
 -- setScoreCard :: Game -> ScoreCard -> Game
 -- setScoreCard game scoreCard' = Game { Game.round = Game.round game, scoreCard = scoreCard'}
 
--- | Select one of the non-selected dice matching the given
--- value. Return `Nothing` if the value is not matching any
--- non-selected dice.
-selectDie :: Int -> Game -> Maybe Game
-selectDie value game = case Round.selectDie (Game.round game) value of
-  Just round' -> Just $ setRound game round'
-  Nothing -> Nothing
-
--- | Select non-selected dice matching the given
--- values. Return `Nothing` if one value is not matching any
--- non-selected dice.
-selectDice :: [Int] -> Game -> Maybe Game
-selectDice values' game = foldr (maybe Nothing . Game.selectDie) (Just game) values'
-
--- | Unselect one of the selected dice matching the given
--- value. Return `Nothing` if the value is not matching any
--- selected dice.
-unselectDie :: Int -> Game -> Maybe Game
-unselectDie value game = case Round.unselectDie (Game.round game) value of
-  Just round' -> Just $ setRound game round'
-  Nothing -> Nothing
+-- | Toggle selection of a die at a particular index.
+toggleDie :: Int -> Game -> Game
+toggleDie index game = setRound game $ Round.toggleDie index $ Game.round game
 
 -- | Throw non-selected dice.
 rethrow :: Game -> Maybe Game

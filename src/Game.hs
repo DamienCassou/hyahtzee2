@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Game (newGame, Game.selectDie, Game.selectDice, Game.unselectDie, Game.rethrow, Game.writeInBox, Game.isFinished) where
+module Game (newGame, scoreCard, Game.selectDie, Game.selectDice, Game.unselectDie, Game.rethrow, Game.writeInBox, Game.isFinished) where
 
 import System.Random (StdGen)
 

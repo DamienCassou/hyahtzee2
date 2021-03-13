@@ -9,3 +9,6 @@ jobs:
         with:
           enable-stack: true
       - run: stack test
+      - run: cabal update
+      - run: cabal install hlint
+      - run: hlint .

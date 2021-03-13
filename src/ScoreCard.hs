@@ -27,7 +27,7 @@ newScoreCard = empty
 -- | Return 2 half-score cards, with the upper section first.
 --
 -- >>> partitionScoreCard $ fromList [(UFigure Aces, 3), (LFigure ThreeOfAKind, 5)]
--- (fromList [(UFigure Aces,3)],fromList [(LFigure ThreeOfAKind,5)])
+-- (fromList [(Aces,3)],fromList [(ThreeOfAKind,5)])
 partitionScoreCard :: ScoreCard -> (ScoreCard, ScoreCard)
 partitionScoreCard = partitionWithKey (\figure _ ->
                                           case figure of
@@ -37,14 +37,14 @@ partitionScoreCard = partitionWithKey (\figure _ ->
 -- | Return the upper part of a score card.
 --
 -- >>> upperScoreCard $ fromList [(UFigure Aces, 3), (LFigure ThreeOfAKind, 5)]
--- fromList [(UFigure Aces,3)]
+-- fromList [(Aces,3)]
 upperScoreCard :: ScoreCard -> ScoreCard
 upperScoreCard scoreCard = fst $ partitionScoreCard scoreCard
 
 -- | Return the lower part of a score card.
 --
 -- >>> lowerScoreCard $ fromList [(UFigure Aces, 3), (LFigure ThreeOfAKind, 5)]
--- fromList [(LFigure ThreeOfAKind,5)]
+-- fromList [(ThreeOfAKind,5)]
 lowerScoreCard :: ScoreCard -> ScoreCard
 lowerScoreCard scoreCard = snd $ partitionScoreCard scoreCard
 
@@ -94,7 +94,7 @@ scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
 -- | Return a score card after adding a new score in a box.
 --
 -- >>> writeInBox (UFigure Aces) 3 $ fromList [(LFigure ThreeOfAKind, 17)]
--- Just (fromList [(UFigure Aces,3),(LFigure ThreeOfAKind,17)])
+-- Just (fromList [(Aces,3),(ThreeOfAKind,17)])
 -- >>> writeInBox (UFigure Aces) 3 $ fromList [(UFigure Aces, 17)]
 -- Nothing
 writeInBox :: Figure -> Int -> ScoreCard -> Maybe ScoreCard

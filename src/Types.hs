@@ -14,4 +14,8 @@ data LowerFigure = ThreeOfAKind | FourOfAKind | FullHouse | SmallStraight | Larg
   deriving stock (Eq, Show, Ord, Enum, Bounded)
 
 data Figure = UFigure UpperFigure | LFigure LowerFigure
-  deriving stock (Eq, Show, Ord)
+  deriving stock (Eq, Ord)
+
+instance Show Figure where
+  show (UFigure figure) = show figure
+  show (LFigure figure) = show figure

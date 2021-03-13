@@ -2,6 +2,8 @@
 
 module ScoreCard (newScoreCard,
                   ScoreCard,
+                  allFigures,
+                  upperFigures, lowerFigures,
                   upperScoreCard, lowerScoreCard,
                   scoreBonus, isFinished,
                   scoreUpperSection, scoreLowerSection,

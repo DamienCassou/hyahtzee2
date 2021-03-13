@@ -1,6 +1,5 @@
 module Main where
 
-
 import System.Random (StdGen, mkStdGen)
 import Game (newGame, selectDie, selectDice, rethrow, writeInBox)
 import Types (Figure(LFigure, UFigure), LowerFigure(ThreeOfAKind), UpperFigure (Twos))
@@ -12,5 +11,5 @@ main =
       game2 = rethrow =<< game1
       game3 = selectDice [2, 2] =<< game2
       game4 = rethrow =<< game3
-      game5 = (writeInBox $ UFigure Twos) =<< game4
+      game5 = writeInBox (UFigure Twos) =<< game4
   in print game5

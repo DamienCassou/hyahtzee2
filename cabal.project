@@ -1,0 +1,5 @@
+packages:
+  ./
+
+package hyahtzee2
+  tests: True

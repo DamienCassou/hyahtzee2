@@ -1,9 +1,9 @@
 module Main where
 
 
-import System.Random (StdGen, mkStdGen)
+import System.Random (mkStdGen)
 import Game (newGame, toggleDie, rethrow, writeInBox)
-import Types (Figure(LFigure, UFigure), LowerFigure(ThreeOfAKind), UpperFigure (Twos))
+import Types (Figure(UFigure), UpperFigure (Twos))
 
 main :: IO ()
 main =

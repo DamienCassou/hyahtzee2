@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
-
 {-# LANGUAGE TupleSections #-}
+
 module Dice (Dice, throwDice, rethrow, values, toggleDie, unselectAll) where
 
 import Text.Printf (printf)

@@ -1,12 +1,13 @@
-import Test.Tasty
-import Test.Tasty.ExpectedFailure
-import Test.Tasty.HUnit
-import Test.Tasty.QuickCheck
+import Test.DocTest as DocTest (doctest)
 
 main :: IO ()
-main =
-  defaultMain $
-    testGroup
-      "nix-haskell-test-test"
-      [ expectFail $ testCase "war is peace" $ 2 + 2 @?= (5 :: Int)
-      ]
+main = do
+  doctest ["-isrc"
+          , "src/Dice.hs"
+          , "src/Game.hs"
+          , "src/Round.hs"
+          , "src/Score.hs"
+          , "src/ScoreCard.hs"
+          , "src/Types.hs"
+          , "src/Util.hs"
+          ]

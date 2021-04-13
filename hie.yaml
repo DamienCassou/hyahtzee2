@@ -1,0 +1,13 @@
+cradle:
+  multi:
+    # - path: "ignore/"
+    #   config: {cradle: {none: }}
+
+    - path: "src"
+      config: {cradle: {cabal: {component: "lib:hyahtzee2"}}}
+
+    - path: "app"
+      config: {cradle: {cabal: {component: "hyahtzee2:hyahtzee2-exe"}}}
+
+    - path: "test"
+      config: {cradle: {cabal: {component: "hyahtzee2:hyahtzee2-test"}}}

@@ -22,7 +22,7 @@ let
         src = ./.;
         name = "hyahtzee2";
       };
-      compiler-nix-name = "ghc8102";
+      compiler-nix-name = "ghc8104";
     };
   };
 in

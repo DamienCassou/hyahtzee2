@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: [ '8.10.2' ]
+        ghc: [ '8.10.4' ]
         os: [ ubuntu-latest ]
         required: [ required ]
     continue-on-error: ${{ matrix.required == 'optional' }}

@@ -24,6 +24,8 @@ jobs:
         run: nix build -L -f pkgs.nix hsPkgs.hyahtzee2.checks
       - name: Build development tools
         run: nix build -L -f shell.nix
+      - name: Run hlint
+        run: nix-shell --run 'hlint .'
 
   stack-build:
     name: Stack ${{ matrix.resolver }} on ${{ matrix.os }} (${{ matrix.required }})

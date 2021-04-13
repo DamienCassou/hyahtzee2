@@ -8,6 +8,7 @@ hsPkgs.shellFor {
   withHoogle = true;
   tools = {
     cabal = "latest";
+    doctest = "latest";
     haskell-language-server = "latest";
     hlint = "latest";
   };

@@ -26,6 +26,8 @@ jobs:
         run: nix build -L -f shell.nix
       - name: Run hlint
         run: nix-shell --run 'hlint .'
+      - name: Run doctest
+        run: nix-shell --run 'doctest src'
 
   stack-build:
     name: Stack ${{ matrix.resolver }} on ${{ matrix.os }} (${{ matrix.required }})

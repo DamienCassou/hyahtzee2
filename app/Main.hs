@@ -1,16 +1,31 @@
 module Main where
 
+import qualified Brick (
+  App, App(..),
+  attrMap,
+  appDraw, appHandleEvent, appStartEvent, appAttrMap, appChooseCursor,
+  defaultMain,
+  neverShowCursor)
 
-import System.Random (mkStdGen)
-import Game (newGame, toggleDie, rethrow, writeInBox)
-import Types (Figure(UFigure), UpperFigure (Twos))
+import qualified Graphics.Vty as Vty (defAttr)
+
+import qualified System.Random as Random (mkStdGen)
+import qualified Control.Monad (void)
+
+import qualified Core (GameUI, newGameUI)
+import qualified Draw (drawUI, Name)
+import qualified Events (appEvent)
+
+import qualified Game (newGame)
+
+app :: Brick.App Core.GameUI e Draw.Name
+app =
+    Brick.App { Brick.appDraw = Draw.drawUI
+              , Brick.appHandleEvent = Events.appEvent
+              , Brick.appStartEvent = return
+              , Brick.appAttrMap = const $ Brick.attrMap Vty.defAttr []
+              , Brick.appChooseCursor = Brick.neverShowCursor
+              }
 
 main :: IO ()
-main =
-  let game0 = newGame $ mkStdGen 1
-      game1 = toggleDie 1 game0
-      game2 = rethrow game1
-      game3 = maybe game2 (Just . toggleDie 3) game2
-      game4 = rethrow =<< game3
-      game5 = writeInBox (UFigure Twos) =<< game4
-  in print game5
+main = Control.Monad.void $ Brick.defaultMain app $ Core.newGameUI $ Game.newGame $ Random.mkStdGen 1

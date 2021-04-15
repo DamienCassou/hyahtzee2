@@ -32,7 +32,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        resolver: [ lts-17 ]
+        # The "nightly" resolver is needed for Brick.Widgets.Table:
+        resolver: [ nightly ]
         os: [ ubuntu-latest ]
         required: [ required ]
     continue-on-error: ${{ matrix.required == 'optional' }}

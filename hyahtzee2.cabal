@@ -68,6 +68,9 @@ test-suite test
     tests
   main-is:
     test.hs
+  other-modules:
+    UtilTests
+
   build-depends:
       base >= 4 && < 5
     , tasty >= 1.4.1

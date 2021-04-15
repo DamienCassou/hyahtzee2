@@ -5,7 +5,7 @@ module Util
   , generateRandomValues
   ) where
 
-import System.Random (StdGen, Random (randomR))
+import qualified System.Random as Random (StdGen, Random (randomR))
 
 -- $setup
 -- >>> import Text.Printf (printf)
@@ -26,7 +26,7 @@ modifyNth n f (x:xs)
 --
 -- >>> generateRandomValues 5 $ mkStdGen 0
 -- ([5,1,4,6,6],732249858 652912057)
-generateRandomValues :: Int -> StdGen -> ([Int], StdGen)
+generateRandomValues :: Int -> Random.StdGen -> ([Int], Random.StdGen)
 generateRandomValues number randomGen = foldl
   (\(dice, randomGen') _ -> let (die, randomGen'') = generateRandomValue randomGen' in
       (die:dice, randomGen''))
@@ -39,5 +39,5 @@ generateRandomValues number randomGen = foldl
 -- (6,40014 40692)
 -- >>> generateRandomValue $ snd (generateRandomValue $ mkStdGen 1)
 -- (5,1054756829 1655838864)
-generateRandomValue :: StdGen -> (Int, StdGen)
-generateRandomValue = randomR (1, 6)
+generateRandomValue :: Random.StdGen -> (Int, Random.StdGen)
+generateRandomValue = Random.randomR (1, 6)

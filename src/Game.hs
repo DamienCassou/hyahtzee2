@@ -1,6 +1,18 @@
 {-# LANGUAGE Safe #-}
 
-module Game (Game, newGame, scoreCard, Game.round, Game.toggleDie, Game.rethrow, Game.writeInBox, Game.isFinished, Game.setDice, Game.dice, Game.canThrowDice) where
+module Game
+  ( Game
+  , newGame
+  , scoreCard
+  , Game.round
+  , Game.toggleDie
+  , Game.rethrow
+  , Game.writeInBox
+  , Game.isFinished
+  , Game.setDice
+  , Game.dice
+  , Game.canThrowDice
+  ) where
 
 import System.Random (StdGen)
 

@@ -1,6 +1,18 @@
 {-# LANGUAGE Safe #-}
 
-module Round (Round, newRound, showIteration, showDice, Round.toggleDie, Round.rethrow, Round.values,renewRound, setDice, Round.dice, canThrowDice) where
+module Round
+  ( Round
+  , newRound
+  , showIteration
+  , showDice
+  , Round.toggleDie
+  , Round.rethrow
+  , Round.values
+  , renewRound
+  , setDice
+  , Round.dice
+  , canThrowDice
+  ) where
 
 import System.Random (StdGen)
 import Text.Printf (printf)

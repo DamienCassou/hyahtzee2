@@ -1,14 +1,20 @@
 {-# LANGUAGE Safe #-}
 
-module ScoreCard (newScoreCard,
-                  ScoreCard,
-                  value,
-                  allFigures,
-                  upperFigures, lowerFigures,
-                  upperScoreCard, lowerScoreCard,
-                  scoreBonus, isFinished,
-                  scoreUpperSection, scoreLowerSection,
-                  writeInBox) where
+module ScoreCard
+  ( newScoreCard
+  , ScoreCard
+  , value
+  , allFigures
+  , upperFigures
+  , lowerFigures
+  , upperScoreCard
+  , lowerScoreCard
+  , scoreBonus
+  , isFinished
+  , scoreUpperSection
+  , scoreLowerSection
+  , writeInBox
+  ) where
 
 import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup, member, (!?))
 

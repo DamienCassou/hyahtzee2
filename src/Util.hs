@@ -1,6 +1,9 @@
 {-# LANGUAGE Safe #-}
 
-module Util (modifyNth, generateRandomValues) where
+module Util
+  ( modifyNth
+  , generateRandomValues
+  ) where
 
 import System.Random (StdGen, Random (randomR))
 

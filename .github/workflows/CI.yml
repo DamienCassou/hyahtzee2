@@ -19,11 +19,11 @@ jobs:
           name: hyahtzee2
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build dependencies
-        run: nix build -L '(import ./pkgs.nix).hsPkgs.shellFor {}'
+        run: nix-build --expr '(import ./pkgs.nix).hsPkgs.shellFor {}'
       - name: Build hyahtzee2
-        run: nix build -L -f pkgs.nix hsPkgs.hyahtzee2.checks
+        run: nix-build -A hsPkgs.hyahtzee2.checks pkgs.nix
       - name: Build development tools
-        run: nix build -L -f shell.nix
+        run: nix-build shell.nix
       - name: Run hlint
         run: nix-shell --run 'hlint .'
 

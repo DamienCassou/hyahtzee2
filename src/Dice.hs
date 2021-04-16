@@ -1,14 +1,22 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE TupleSections #-}
 
-module Dice (Dice, throwDice, rethrow, values, toggleDie, unselectAll) where
+module Dice
+  ( Dice
+  , throwDice
+  , rethrow
+  , values
+  , toggleDie
+  , unselectAll
+  ) where
 
-import Text.Printf (printf)
-import System.Random (StdGen)
+import qualified Text.Printf as Printf (printf)
+import qualified System.Random as Random (StdGen)
+import qualified Data.Bifunctor as Bifunctor (second)
+import qualified Data.List as List (intercalate)
 
-import Util (modifyNth, generateRandomValues)
-import Data.Bifunctor (second)
-import Data.List (intercalate)
+import qualified Util (modifyNth, generateRandomValues)
+
 
 -- $setup
 -- >>> import System.Random(mkStdGen)
@@ -31,26 +39,26 @@ newtype Dice = Dice [(Int, Bool)]
 instance Show Dice where
   show (Dice dice) =
     "["
-    ++ intercalate ", " (map (\(value, selected) -> printf (if selected then "[%d]" else "%d") value :: String) dice)
+    ++ List.intercalate ", " (map (\(value, selected) -> Printf.printf (if selected then "[%d]" else "%d") value :: String) dice)
     ++ "]"
 
 -- | Create an initial sequence of dice
 --
 -- >>> throwDice $ mkStdGen 0
 -- ([5, 1, 4, 6, 6],732249858 652912057)
-throwDice :: StdGen -> (Dice, StdGen)
+throwDice :: Random.StdGen -> (Dice, Random.StdGen)
 throwDice randomGen =
-  let (values', randomGen') = generateRandomValues 5 randomGen in
+  let (values', randomGen') = Util.generateRandomValues 5 randomGen in
     (Dice $ map (, False) values', randomGen')
 
 -- | Throw non-selected dice.
 --
 -- >>> rethrow (Dice [(5, True), (5, True), (5, True), (1, False), (2, False)]) (mkStdGen 0)
 -- ([[5], [5], [5], 6, 6],1601120196 1655838864)
-rethrow :: Dice -> StdGen -> (Dice, StdGen)
+rethrow :: Dice -> Random.StdGen -> (Dice, Random.StdGen)
 rethrow (Dice dice) randomGen =
   let amountToThrow = length (filter (not . snd) dice)
-      (values', randomGen') = generateRandomValues amountToThrow randomGen
+      (values', randomGen') = Util.generateRandomValues amountToThrow randomGen
       keptDice = filter snd dice
       newDice = map (,False) values'
   in
@@ -66,14 +74,14 @@ rethrow (Dice dice) randomGen =
 -- >>> toggleDie 1 $ Dice [(3,True),(5,False)]
 -- [[3], [5]]
 toggleDie :: Int -> Dice -> Dice
-toggleDie index (Dice values')= Dice $ modifyNth index (second not) values'
+toggleDie index (Dice values')= Dice $ Util.modifyNth index (Bifunctor.second not) values'
 
 -- | Unselect all dice.
 --
 -- >>> unselectAll $ Dice [(3,True),(5,False),(6,False)]
 -- [3, 5, 6]
 unselectAll :: Dice -> Dice
-unselectAll (Dice dice) = Dice $ map (second (const False)) dice
+unselectAll (Dice dice) = Dice $ map (Bifunctor.second (const False)) dice
 
 -- | Return a sorted list of the value of all dice regardless of selection.
 --

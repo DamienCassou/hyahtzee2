@@ -3,9 +3,11 @@
 
 -- TODO : rename this file to Figure.hs
 
-module Types (UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
-             , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
-             , Figure(UFigure, LFigure)) where
+module Types
+  ( UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
+  , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
+  , Figure(UFigure, LFigure)
+  ) where
 
 data UpperFigure = Aces | Twos | Threes | Fours | Fives | Sixes
   deriving stock (Eq, Show, Ord, Enum, Bounded)

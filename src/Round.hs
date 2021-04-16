@@ -1,11 +1,23 @@
 {-# LANGUAGE Safe #-}
 
-module Round (Round, newRound, showIteration, showDice, Round.toggleDie, Round.rethrow, Round.values,renewRound, setDice, Round.dice, canThrowDice) where
+module Round
+  ( Round
+  , newRound
+  , showIteration
+  , showDice
+  , toggleDie
+  , rethrow
+  , values
+  , renewRound
+  , setDice
+  , Round.dice
+  , canThrowDice
+  ) where
 
-import System.Random (StdGen)
-import Text.Printf (printf)
+import qualified System.Random as Random (StdGen)
+import qualified Text.Printf as Printf (printf)
 
-import Dice (Dice, rethrow, toggleDie, values, throwDice, unselectAll)
+import qualified Dice (Dice, rethrow, toggleDie, values, throwDice, unselectAll)
 
 -- $setup
 -- >>> import System.Random (mkStdGen)
@@ -14,9 +26,9 @@ data Round = Round {
   -- The number of times the user threw the dice (from 1 to 3)
   iteration :: Int
   -- The 5 current dice
-  , dice :: Dice
+  , dice :: Dice.Dice
   -- A number generator
-  , randomGen :: StdGen
+  , randomGen :: Random.StdGen
   }
 
 maxIteration :: Int
@@ -27,15 +39,15 @@ maxIteration = 3
 -- >>> Round { iteration = 2, dice = fst (throwDice (mkStdGen 0)), randomGen = mkStdGen 0 }
 -- [5, 1, 4, 6, 6] (throw 2/3)
 instance Show Round where
-  show round' = printf "%s %s" (showDice round') (showIteration round')
+  show round' = Printf.printf "%s %s" (showDice round') (showIteration round')
 
 showDice :: Round -> String
 showDice round' = show (dice round')
 
 showIteration :: Round -> String
-showIteration round' = printf "(throw %d/%d)" (iteration round') maxIteration
+showIteration round' = Printf.printf "(throw %d/%d)" (iteration round') maxIteration
 
-setDice :: Round -> Dice -> Round
+setDice :: Round -> Dice.Dice -> Round
 setDice round' dice' = Round { iteration = iteration round', dice = dice', randomGen = randomGen round'}
 
 -- | Return true iff the round is not at its 3rd iteration yet
@@ -64,9 +76,9 @@ isPenultimateRound round' = iteration round' == maxIteration - 1
 --
 -- >>> newRound $ mkStdGen 0
 -- [5, 1, 4, 6, 6] (throw 1/3)
-newRound :: StdGen -> Round
+newRound :: Random.StdGen -> Round
 newRound randomGen' =
-  let (dice', randomGen'') = throwDice randomGen' in
+  let (dice', randomGen'') = Dice.throwDice randomGen' in
     Round {iteration = 1, dice = dice', randomGen = randomGen''}
 
 renewRound :: Round -> Round
@@ -92,7 +104,7 @@ rethrow round'
     in
       Just $ Round {
       iteration = iteration round' + 1,
-      dice = if penultimate then unselectAll dice' else dice',
+      dice = if penultimate then Dice.unselectAll dice' else dice',
       randomGen = randomGen'}
 
 -- | Select or unselect the die at given index.

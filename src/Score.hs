@@ -3,7 +3,12 @@
 module Score (score) where
 
 import Data.List (isSubsequenceOf)
-import Types (Figure (UFigure, LFigure), UpperFigure (Aces, Twos, Threes, Fours, Fives, Sixes), LowerFigure (ThreeOfAKind, FourOfAKind, SmallStraight, LargeStraight, FullHouse, Yahtzee, Chance))
+
+import qualified Types
+  ( Figure (UFigure, LFigure)
+  , UpperFigure (Aces, Twos, Threes, Fours, Fives, Sixes)
+  , LowerFigure (ThreeOfAKind, FourOfAKind, SmallStraight, LargeStraight, FullHouse, Yahtzee, Chance)
+  )
 
 type Throw = [Int]
 type Scoring = Throw -> Int
@@ -187,17 +192,17 @@ scoreYahtzee _ = 0
 scoreChance :: Scoring
 scoreChance = sum
 
-score :: Figure -> [Int] -> Int
-score (UFigure Aces) = scoreAces
-score (UFigure Twos) = scoreTwos
-score (UFigure Threes) = scoreThrees
-score (UFigure Fours) = scoreFours
-score (UFigure Fives) = scoreFives
-score (UFigure Sixes) = scoreSixes
-score (LFigure ThreeOfAKind) = scoreThreeOfAKind
-score (LFigure FourOfAKind) = scoreFourOfAKind
-score (LFigure SmallStraight) = scoreSmallStraight
-score (LFigure LargeStraight) = scoreLargeStraight
-score (LFigure FullHouse) = scoreFullHouse
-score (LFigure Yahtzee) = scoreYahtzee
-score (LFigure Chance) = scoreChance
+score :: Types.Figure -> [Int] -> Int
+score (Types.UFigure Types.Aces) = scoreAces
+score (Types.UFigure Types.Twos) = scoreTwos
+score (Types.UFigure Types.Threes) = scoreThrees
+score (Types.UFigure Types.Fours) = scoreFours
+score (Types.UFigure Types.Fives) = scoreFives
+score (Types.UFigure Types.Sixes) = scoreSixes
+score (Types.LFigure Types.ThreeOfAKind) = scoreThreeOfAKind
+score (Types.LFigure Types.FourOfAKind) = scoreFourOfAKind
+score (Types.LFigure Types.SmallStraight) = scoreSmallStraight
+score (Types.LFigure Types.LargeStraight) = scoreLargeStraight
+score (Types.LFigure Types.FullHouse) = scoreFullHouse
+score (Types.LFigure Types.Yahtzee) = scoreYahtzee
+score (Types.LFigure Types.Chance) = scoreChance

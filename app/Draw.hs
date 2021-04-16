@@ -9,8 +9,7 @@ import qualified Brick.Widgets.Border.Style as BrickBS (unicodeBold)
 import qualified Brick.Widgets.Center as BrickCe (hCenter)
 import qualified Brick.Widgets.Table as BrickT (renderTable, table)
 
-import qualified Hyahtzee2.Types as Types (Figure)
-import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, allFigures, value)
+import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, ScoreCardLine, valueAtLine, allLines)
 import qualified Hyahtzee2.Game as Game (scoreCard, round, canThrowDice)
 import qualified Hyahtzee2.Round as Round (Round, showIteration, showDice)
 
@@ -29,19 +28,19 @@ drawRound round = BrickC.hLimit 30
   $ BrickC.padAll 1
   $ BrickC.str (Round.showDice round)
 
-figureValue :: ScoreCard.ScoreCard -> Types.Figure -> String
-figureValue scoreCard figure = maybe "  -  " show (ScoreCard.value scoreCard figure)
+lineValue :: ScoreCard.ScoreCard -> ScoreCard.ScoreCardLine -> String
+lineValue scoreCard line = maybe "  -  " show (ScoreCard.valueAtLine scoreCard line)
 
-drawFigure :: ScoreCard.ScoreCard -> Types.Figure -> [Brick.Widget Name]
-drawFigure scoreCard figure = [
-  -- Figure name:
-  BrickC.str $ show figure
+drawScoreCardLine :: ScoreCard.ScoreCard -> ScoreCard.ScoreCardLine -> [Brick.Widget Name]
+drawScoreCardLine scoreCard line = [
+  -- Line name:
+  BrickC.str $ show line
   -- Score:
-  , BrickC.str $ figureValue scoreCard figure
+  , BrickC.str $ lineValue scoreCard line
   ]
 
 drawScoreCard :: ScoreCard.ScoreCard -> Brick.Widget Name
-drawScoreCard scoreCard = BrickT.renderTable $ BrickT.table $ map (drawFigure scoreCard) ScoreCard.allFigures
+drawScoreCard scoreCard = BrickT.renderTable $ BrickT.table $ map (drawScoreCardLine scoreCard) ScoreCard.allLines
 
 drawGame :: Core.GameUI -> Brick.Widget Name
 drawGame gameUI = BrickC.hBox [

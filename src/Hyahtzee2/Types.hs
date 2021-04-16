@@ -3,7 +3,7 @@
 
 -- TODO : rename this file to Figure.hs
 
-module Types
+module Hyahtzee2.Types
   ( UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
   , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
   , Figure(UFigure, LFigure)

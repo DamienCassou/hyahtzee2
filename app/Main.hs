@@ -16,7 +16,7 @@ import qualified Core (GameUI, newGameUI)
 import qualified Draw (drawUI, Name)
 import qualified Events (appEvent)
 
-import qualified Game (newGame)
+import qualified Hyahtzee2.Game as Game (newGame)
 
 app :: Brick.App Core.GameUI e Draw.Name
 app =

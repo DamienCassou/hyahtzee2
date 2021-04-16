@@ -34,13 +34,13 @@ library
   import:          common-options
   hs-source-dirs:  src
   exposed-modules:
-    Dice
-    Game
-    Round
-    Score
-    ScoreCard
-    Types
-    Util
+    Hyahtzee2.Dice
+    Hyahtzee2.Game
+    Hyahtzee2.Round
+    Hyahtzee2.Score
+    Hyahtzee2.ScoreCard
+    Hyahtzee2.Types
+    Hyahtzee2.Util
 
   build-depends:
 

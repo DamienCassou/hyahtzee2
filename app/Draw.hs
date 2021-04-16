@@ -1,5 +1,7 @@
 module Draw (drawUI, Name) where
 
+import Prelude hiding (round)
+
 import qualified Brick (Widget, Padding(Pad))
 import qualified Brick.Widgets.Core as BrickC (hLimit, str, withBorderStyle, padTop, vBox, hBox, padAll)
 import qualified Brick.Widgets.Border as BrickB (borderWithLabel)
@@ -7,10 +9,10 @@ import qualified Brick.Widgets.Border.Style as BrickBS (unicodeBold)
 import qualified Brick.Widgets.Center as BrickCe (hCenter)
 import qualified Brick.Widgets.Table as BrickT (renderTable, table)
 
-import qualified Types (Figure)
-import qualified ScoreCard (ScoreCard, allFigures, value)
-import qualified Game (Game, scoreCard, round, canThrowDice)
-import qualified Round (Round, showIteration, showDice)
+import qualified Hyahtzee2.Types as Types (Figure)
+import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, allFigures, value)
+import qualified Hyahtzee2.Game as Game (scoreCard, round, canThrowDice)
+import qualified Hyahtzee2.Round as Round (Round, showIteration, showDice)
 
 import qualified Core (GameUI, game)
 

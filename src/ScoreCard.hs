@@ -16,29 +16,31 @@ module ScoreCard
   , writeInBox
   ) where
 
-import Data.Map (partitionWithKey, elems, insert, Map, empty, lookup, member, (!?))
+import qualified Data.Map as Map (partitionWithKey, elems, insert, Map, empty, lookup, member, (!?))
 
-import Types (Figure (UFigure, LFigure),
-              UpperFigure, LowerFigure)
+import qualified Types ( Figure (UFigure, LFigure)
+                       , UpperFigure
+                       , LowerFigure
+                       )
 
 -- $setup
 -- >>> import Data.Map (fromList)
 -- >>> import Types (UpperFigure(Aces,Twos,Threes,Fours,Fives,Sixes), LowerFigure(ThreeOfAKind))
 
-type ScoreCard = Map Figure Int
+type ScoreCard = Map.Map Types.Figure Int
 
 newScoreCard :: ScoreCard
-newScoreCard = empty
+newScoreCard = Map.empty
 
 -- | Return 2 half-score cards, with the upper section first.
 --
 -- >>> partitionScoreCard $ fromList [(UFigure Aces, 3), (LFigure ThreeOfAKind, 5)]
 -- (fromList [(Aces,3)],fromList [(ThreeOfAKind,5)])
 partitionScoreCard :: ScoreCard -> (ScoreCard, ScoreCard)
-partitionScoreCard = partitionWithKey (\figure _ ->
-                                          case figure of
-                                            UFigure _ -> True
-                                            LFigure _ -> False)
+partitionScoreCard = Map.partitionWithKey (\figure _ ->
+                                             case figure of
+                                               Types.UFigure _ -> True
+                                               Types.LFigure _ -> False)
 
 -- | Return the upper part of a score card.
 --
@@ -59,7 +61,7 @@ lowerScoreCard scoreCard = snd $ partitionScoreCard scoreCard
 -- >>> boxes $ fromList [(UFigure Aces, 3), (LFigure ThreeOfAKind, 5)]
 -- [3,5]
 boxes :: ScoreCard -> [Int]
-boxes = elems
+boxes = Map.elems
 
 -- | Return the sum of all numbers in the boxes of a score card.
 --
@@ -103,28 +105,28 @@ scoreLowerSection scoreCard = sumBoxes $ lowerScoreCard scoreCard
 -- Just (fromList [(Aces,3),(ThreeOfAKind,17)])
 -- >>> writeInBox (UFigure Aces) 3 $ fromList [(UFigure Aces, 17)]
 -- Nothing
-writeInBox :: Figure -> Int -> ScoreCard -> Maybe ScoreCard
-writeInBox figure value' scoreCard = case Data.Map.lookup figure scoreCard of
+writeInBox :: Types.Figure -> Int -> ScoreCard -> Maybe ScoreCard
+writeInBox figure value' scoreCard = case Map.lookup figure scoreCard of
   Just _ -> Nothing
-  Nothing -> Just $ insert figure value' scoreCard
+  Nothing -> Just $ Map.insert figure value' scoreCard
 
 -- | List all upper figures
 --
 -- >>> upperFigures
 -- [Aces,Twos,Threes,Fours,Fives,Sixes]
-upperFigures :: [UpperFigure]
-upperFigures = [minBound .. maxBound] :: [UpperFigure]
+upperFigures :: [Types.UpperFigure]
+upperFigures = [minBound .. maxBound] :: [Types.UpperFigure]
 
 -- | List all lower figures
 --
 -- >>> lowerFigures
 -- [ThreeOfAKind,FourOfAKind,FullHouse,SmallStraight,LargeStraight,Yahtzee,Chance]
-lowerFigures :: [LowerFigure]
-lowerFigures = [minBound .. maxBound] :: [LowerFigure]
+lowerFigures :: [Types.LowerFigure]
+lowerFigures = [minBound .. maxBound] :: [Types.LowerFigure]
 
 -- | List all upper and lower figures.
-allFigures :: [Figure]
-allFigures = map UFigure upperFigures ++ map LFigure lowerFigures
+allFigures :: [Types.Figure]
+allFigures = map Types.UFigure upperFigures ++ map Types.LFigure lowerFigures
 
 -- | Return true iff the score card contains a value for the figure.
 --
@@ -132,8 +134,8 @@ allFigures = map UFigure upperFigures ++ map LFigure lowerFigures
 -- True
 -- >>> hasValue (fromList [(UFigure Aces, 3)]) (UFigure Twos)
 -- False
-hasValue :: ScoreCard -> Figure -> Bool
-hasValue scoreCard figure = member figure scoreCard
+hasValue :: ScoreCard -> Types.Figure -> Bool
+hasValue scoreCard figure = Map.member figure scoreCard
 
 -- | Return the value associated with a figure or Nothing.
 --
@@ -141,8 +143,8 @@ hasValue scoreCard figure = member figure scoreCard
 -- Just 3
 -- >>> value (fromList [(UFigure Aces, 3)]) (UFigure Twos)
 -- Nothing
-value :: ScoreCard -> Figure -> Maybe Int
-value scoreCard figure = scoreCard !? figure
+value :: ScoreCard -> Types.Figure -> Maybe Int
+value scoreCard figure = scoreCard Map.!? figure
 
 -- | Return true iff all figures have been written to in the score card.
 --

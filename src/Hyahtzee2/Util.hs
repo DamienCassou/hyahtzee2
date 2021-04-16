@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Util
+module Hyahtzee2.Util
   ( modifyNth
   , generateRandomValues
   ) where

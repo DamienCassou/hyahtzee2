@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Game
+module Hyahtzee2.Game
   ( Game
   , newGame
   , scoreCard
@@ -17,11 +17,11 @@ module Game
 import Prelude hiding (round)
 import qualified System.Random as Random (StdGen)
 
-import qualified Round (Round, newRound, renewRound, toggleDie, rethrow, values, setDice, dice, canThrowDice)
-import qualified ScoreCard (ScoreCard, newScoreCard, writeInBox, isFinished)
-import qualified Types (Figure)
-import qualified Score (score)
-import qualified Dice (Dice)
+import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, setDice, dice, canThrowDice)
+import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, newScoreCard, writeInBox, isFinished)
+import qualified Hyahtzee2.Types as Types (Figure)
+import qualified Hyahtzee2.Score as Score (score)
+import qualified Hyahtzee2.Dice as Dice (Dice)
 
 data Game = Game { round :: Round.Round, scoreCard :: ScoreCard.ScoreCard }
   deriving Show

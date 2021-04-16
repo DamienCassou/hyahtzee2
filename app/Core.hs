@@ -1,6 +1,6 @@
 module Core (GameUI, newGameUI, game, throwDice, toggleDie, tryThrowingDice) where
 
-import qualified Game (Game, toggleDie, rethrow)
+import qualified Hyahtzee2.Game as Game (Game, toggleDie, rethrow)
 
 newtype GameUI = GameUI { game :: Game.Game}
 

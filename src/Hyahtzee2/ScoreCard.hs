@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module ScoreCard
+module Hyahtzee2.ScoreCard
   ( newScoreCard
   , ScoreCard
   , value
@@ -18,10 +18,11 @@ module ScoreCard
 
 import qualified Data.Map as Map (partitionWithKey, elems, insert, Map, empty, lookup, member, (!?))
 
-import qualified Types ( Figure (UFigure, LFigure)
-                       , UpperFigure
-                       , LowerFigure
-                       )
+import qualified Hyahtzee2.Types as Types
+  ( Figure (UFigure, LFigure)
+  , UpperFigure
+  , LowerFigure
+  )
 
 -- $setup
 -- >>> import Data.Map (fromList)

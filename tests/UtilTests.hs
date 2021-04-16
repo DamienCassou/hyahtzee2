@@ -3,7 +3,7 @@ module UtilTests (tests) where
 import Test.Tasty
 import Test.Tasty.HUnit
 
-import Util (modifyNth, generateRandomValues)
+import Hyahtzee2.Util as Util (modifyNth, generateRandomValues)
 
 tests = testGroup "Util" [modifyNthTests]
 

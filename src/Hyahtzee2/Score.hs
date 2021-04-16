@@ -1,10 +1,10 @@
 {-# LANGUAGE Safe #-}
 
-module Score (score) where
+module Hyahtzee2.Score (score) where
 
 import Data.List (isSubsequenceOf)
 
-import qualified Types
+import qualified Hyahtzee2.Types as Types
   ( Figure (UFigure, LFigure)
   , UpperFigure (Aces, Twos, Threes, Fours, Fives, Sixes)
   , LowerFigure (ThreeOfAKind, FourOfAKind, SmallStraight, LargeStraight, FullHouse, Yahtzee, Chance)

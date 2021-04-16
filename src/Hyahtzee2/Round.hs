@@ -1,6 +1,6 @@
 {-# LANGUAGE Safe #-}
 
-module Round
+module Hyahtzee2.Round
   ( Round
   , newRound
   , showIteration
@@ -10,14 +10,14 @@ module Round
   , values
   , renewRound
   , setDice
-  , Round.dice
+  , dice
   , canThrowDice
   ) where
 
 import qualified System.Random as Random (StdGen)
 import qualified Text.Printf as Printf (printf)
 
-import qualified Dice (Dice, rethrow, toggleDie, values, throwDice, unselectAll)
+import qualified Hyahtzee2.Dice as Dice (Dice, rethrow, toggleDie, values, throwDice, unselectAll)
 
 -- $setup
 -- >>> import System.Random (mkStdGen)

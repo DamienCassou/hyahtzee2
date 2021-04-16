@@ -1,7 +1,7 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE TupleSections #-}
 
-module Dice
+module Hyahtzee2.Dice
   ( Dice
   , throwDice
   , rethrow
@@ -15,7 +15,7 @@ import qualified System.Random as Random (StdGen)
 import qualified Data.Bifunctor as Bifunctor (second)
 import qualified Data.List as List (intercalate)
 
-import qualified Util (modifyNth, generateRandomValues)
+import qualified Hyahtzee2.Util as Util (modifyNth, generateRandomValues)
 
 
 -- $setup

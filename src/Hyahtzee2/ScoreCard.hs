@@ -7,10 +7,12 @@ module Hyahtzee2.ScoreCard
   , allLines
   , valueAtLine
   , isFinished
-  , writeInBox
+  , writeInLine
   ) where
 
-import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size)
+import qualified Data.List as List (all)
+import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size, member, elems)
+import qualified Data.Maybe as Maybe (fromMaybe)
 
 import qualified Hyahtzee2.Types as Types
   ( Figure
@@ -30,12 +32,20 @@ instance Show ScoreCardLine where
   show UpperBonusLine = "Bonus"
   show TotalLine = "Total"
 
+upperFigures :: [Types.UpperFigure]
+upperFigures = [minBound .. maxBound]
+
+lowerFigures :: [Types.LowerFigure]
+lowerFigures = [minBound .. maxBound]
+
+upperFigureLines :: [ScoreCardLine]
+upperFigureLines = map (FigureLine . Types.UFigure) upperFigures
+
+lowerFigureLines :: [ScoreCardLine]
+lowerFigureLines = map (FigureLine . Types.LFigure) lowerFigures
+
 allLines :: [ ScoreCardLine ]
 allLines = upperFigureLines ++ [ UpperBonusLine ] ++ lowerFigureLines ++ [ TotalLine ]
-  where upperFigureLines = map (FigureLine . Types.UFigure) upperFigures
-        upperFigures = [minBound .. maxBound] :: [Types.UpperFigure]
-        lowerFigureLines = map (FigureLine . Types.LFigure) lowerFigures
-        lowerFigures = [minBound .. maxBound] :: [Types.LowerFigure]
 
 numberOfLines :: Int
 numberOfLines = length allLines
@@ -48,12 +58,47 @@ newScoreCard = Map.empty
 
 -- | Return a score card after writing a score for a figure. If a
 -- score has already been written for this figure, return Nothing.
-writeInBox :: Types.Figure -> Int -> ScoreCard -> Maybe ScoreCard
-writeInBox figure value scoreCard =
+writeInLine :: Types.Figure -> Int -> ScoreCard -> Maybe ScoreCard
+writeInLine figure value scoreCard =
   let line = FigureLine figure
   in case Map.lookup line scoreCard of
        Just _ -> Nothing -- error, there is already a number
-       Nothing -> Just $ Map.insert line value scoreCard
+       Nothing -> Just $ autocompleteLines $ Map.insert line value scoreCard
+
+autocompleteLines :: ScoreCard -> ScoreCard
+autocompleteLines scoreCard = foldl
+                              (\result function -> function result)
+                              scoreCard
+                              autocompleteFunctions
+
+autocompleteFunctions :: [ScoreCard -> ScoreCard]
+autocompleteFunctions = [autocompleteBonusLine, autocompleteTotalLine]
+
+autocompleteBonusLine :: ScoreCard -> ScoreCard
+autocompleteBonusLine scoreCard = if canFillBonusLine
+                                  then scoreCardWithBonusLine
+                                  else scoreCard
+  where
+    canFillBonusLine = bonusLineIsEmpty && allUpperFiguresHaveScore
+    bonusLineIsEmpty = not $ hasValueAtLine scoreCard UpperBonusLine
+    allUpperFiguresHaveScore = List.all (hasValueAtLine scoreCard) upperFigureLines
+    scoreCardWithBonusLine = Map.insert UpperBonusLine bonusValue scoreCard
+    bonusValue = if reachesThreshold then 35 else 0
+    reachesThreshold = sum upperFigureValues >= 63
+    upperFigureValues = map valueAtLineOr0 upperFigureLines
+    valueAtLineOr0 line = Maybe.fromMaybe 0 (valueAtLine scoreCard line)
+
+autocompleteTotalLine :: ScoreCard -> ScoreCard
+autocompleteTotalLine scoreCard = if canFillTotalLine
+                                  then scoreCardWithTotalLine
+                                  else scoreCard
+  where
+    canFillTotalLine = Map.size scoreCard == (numberOfLines - 1)
+    scoreCardWithTotalLine = Map.insert TotalLine totalValue scoreCard
+    totalValue = sum $ Map.elems scoreCard
+
+hasValueAtLine :: ScoreCard -> ScoreCardLine -> Bool
+hasValueAtLine scoreCard line = Map.member line scoreCard
 
 -- | Return the value associated with a line or Nothing.
 valueAtLine :: ScoreCard -> ScoreCardLine -> Maybe Int

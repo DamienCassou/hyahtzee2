@@ -5,7 +5,7 @@ module Core
   , throwDice
   , toggleDie
   , tryThrowingDice
-  , writeInBox
+  , writeInLine
   , figureForLetter
   , letterForFigure
   , allFigureLetters
@@ -13,7 +13,7 @@ module Core
 
 import qualified Data.List as List (find, sort, zip)
 
-import qualified Hyahtzee2.Game as Game (Game, toggleDie, rethrow, writeInBox)
+import qualified Hyahtzee2.Game as Game (Game, toggleDie, rethrow, writeInLine)
 
 import qualified Hyahtzee2.Types as Types
   ( Figure ( UFigure, LFigure )
@@ -49,11 +49,11 @@ tryThrowingDice gameUI =
     Nothing -> gameUI
     Just game' -> GameUI {game = game'}
 
-writeInBox :: Types.Figure -> GameUI -> GameUI
-writeInBox figure gameUI =
+writeInLine :: Types.Figure -> GameUI -> GameUI
+writeInLine figure gameUI =
   let
     game' = game gameUI
-    maybeGame = Game.writeInBox figure game'
+    maybeGame = Game.writeInLine figure game'
   in
     maybe gameUI GameUI maybeGame
 

@@ -7,7 +7,7 @@ module Hyahtzee2.ScoreCard
   , allLines
   , valueAtLine
   , isFinished
-  , writeInBox
+  , writeInLine
   ) where
 
 import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size)
@@ -48,8 +48,8 @@ newScoreCard = Map.empty
 
 -- | Return a score card after writing a score for a figure. If a
 -- score has already been written for this figure, return Nothing.
-writeInBox :: Types.Figure -> Int -> ScoreCard -> Maybe ScoreCard
-writeInBox figure value scoreCard =
+writeInLine :: Types.Figure -> Int -> ScoreCard -> Maybe ScoreCard
+writeInLine figure value scoreCard =
   let line = FigureLine figure
   in case Map.lookup line scoreCard of
        Just _ -> Nothing -- error, there is already a number

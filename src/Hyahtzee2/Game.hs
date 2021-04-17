@@ -7,7 +7,7 @@ module Hyahtzee2.Game
   , round
   , toggleDie
   , rethrow
-  , writeInBox
+  , writeInLine
   , isFinished
   , setDice
   , dice
@@ -18,7 +18,7 @@ import Prelude hiding (round)
 import qualified System.Random as Random (StdGen)
 
 import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, setDice, dice, canThrowDice)
-import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, newScoreCard, writeInBox, isFinished)
+import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, newScoreCard, writeInLine, isFinished)
 import qualified Hyahtzee2.Types as Types (Figure)
 import qualified Hyahtzee2.Score as Score (score)
 import qualified Hyahtzee2.Dice as Dice (Dice)
@@ -54,8 +54,8 @@ rethrow game = case Round.rethrow (round game) of
   Just round' -> Just $ setRound game round'
   Nothing -> Nothing
 
-writeInBox :: Types.Figure -> Game -> Maybe Game
-writeInBox figure game = case ScoreCard.writeInBox figure value (scoreCard game) of
+writeInLine :: Types.Figure -> Game -> Maybe Game
+writeInLine figure game = case ScoreCard.writeInLine figure value (scoreCard game) of
   Just scoreCard' -> Just $ Game { round = Round.renewRound (round game), scoreCard = scoreCard' }
   Nothing -> Nothing
   where value = Score.score figure $ Round.values (round game)

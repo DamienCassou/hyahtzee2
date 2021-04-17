@@ -22,17 +22,17 @@ import qualified Hyahtzee2.Types as Types
 
 newtype GameUI = GameUI { game :: Game.Game}
 
-newGameUI :: Game.Game -> Core.GameUI
+newGameUI :: Game.Game -> GameUI
 newGameUI game' = GameUI { game = game' }
 
 -- | Select or unselect the die at given index.
-toggleDie :: Int -> Core.GameUI -> Core.GameUI
+toggleDie :: Int -> GameUI -> GameUI
 toggleDie index gameUI =
   let game' = Game.toggleDie index $ game gameUI
   in GameUI {game = game'}
 
 -- | Shuffle all unselected dice.
-throwDice :: Core.GameUI -> Core.GameUI
+throwDice :: GameUI -> GameUI
 throwDice gameUI =
   let
     game' = game gameUI
@@ -41,7 +41,7 @@ throwDice gameUI =
     maybe gameUI GameUI maybeGame
 
 -- | Throw dice if it is still possible. Otherwise do nothing.
-tryThrowingDice :: Core.GameUI -> Core.GameUI
+tryThrowingDice :: GameUI -> GameUI
 tryThrowingDice gameUI =
   let maybeGame' = Game.rethrow $ game gameUI
   in case maybeGame' of

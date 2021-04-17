@@ -30,12 +30,20 @@ instance Show ScoreCardLine where
   show UpperBonusLine = "Bonus"
   show TotalLine = "Total"
 
+upperFigures :: [Types.UpperFigure]
+upperFigures = [minBound .. maxBound]
+
+lowerFigures :: [Types.LowerFigure]
+lowerFigures = [minBound .. maxBound]
+
+upperFigureLines :: [ScoreCardLine]
+upperFigureLines = map (FigureLine . Types.UFigure) upperFigures
+
+lowerFigureLines :: [ScoreCardLine]
+lowerFigureLines = map (FigureLine . Types.LFigure) lowerFigures
+
 allLines :: [ ScoreCardLine ]
 allLines = upperFigureLines ++ [ UpperBonusLine ] ++ lowerFigureLines ++ [ TotalLine ]
-  where upperFigureLines = map (FigureLine . Types.UFigure) upperFigures
-        upperFigures = [minBound .. maxBound] :: [Types.UpperFigure]
-        lowerFigureLines = map (FigureLine . Types.LFigure) lowerFigures
-        lowerFigures = [minBound .. maxBound] :: [Types.LowerFigure]
 
 numberOfLines :: Int
 numberOfLines = length allLines

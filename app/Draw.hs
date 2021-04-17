@@ -1,6 +1,7 @@
 module Draw (drawUI, Name) where
 
 import Prelude hiding (round)
+import qualified Text.Printf as Printf (printf)
 
 import qualified Brick (Widget, Padding(Pad))
 import qualified Brick.Widgets.Core as BrickC (hLimit, str, withBorderStyle, padTop, vBox, hBox, padAll)
@@ -10,10 +11,10 @@ import qualified Brick.Widgets.Center as BrickCe (hCenter)
 import qualified Brick.Widgets.Table as BrickT (renderTable, table)
 
 import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, ScoreCardLine(FigureLine), ScoreCardLine, valueAtLine, allLines)
-import qualified Hyahtzee2.Game as Game (scoreCard, round, canThrowDice)
+import qualified Hyahtzee2.Game as Game (scoreCard, round, canThrowDice, isFinished)
 import qualified Hyahtzee2.Round as Round (Round, showIteration, showDice)
 
-import qualified Core (GameUI, game, letterForFigure)
+import qualified Core (GameUI, game, letterForFigure, allFigureLetters)
 
 type Name = ()
 
@@ -55,7 +56,12 @@ drawHelp gameUI =
     whenCanThrow = if Game.canThrowDice (Core.game gameUI)
       then "- Press `t` to throw dice again\n" ++ "- Press `1`-`6` to toogle die selection\n"
       else ""
-    body = BrickC.str $ whenCanThrow ++ "- Press 'q' to quit\n"
+    whenCanWrite = if not $ Game.isFinished (Core.game gameUI)
+      then Printf.printf "- Press `%c`-`%c` to write score in the score board\n"
+           (head Core.allFigureLetters)
+           (last Core.allFigureLetters)
+      else ""
+    body = BrickC.str $ whenCanThrow ++ whenCanWrite ++ "- Press 'q' to quit\n"
   in BrickC.padTop (Brick.Pad 1) $ BrickB.borderWithLabel (BrickC.str "Help") body
 
 

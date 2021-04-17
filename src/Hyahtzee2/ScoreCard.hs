@@ -3,7 +3,7 @@
 module Hyahtzee2.ScoreCard
   ( newScoreCard
   , ScoreCard
-  , ScoreCardLine
+  , ScoreCardLine(FigureLine, UpperBonusLine, TotalLine)
   , allLines
   , valueAtLine
   , isFinished

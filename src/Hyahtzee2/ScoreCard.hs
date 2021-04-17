@@ -10,7 +10,9 @@ module Hyahtzee2.ScoreCard
   , writeInLine
   ) where
 
-import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size)
+import qualified Data.List as List (all)
+import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size, member, elems)
+import qualified Data.Maybe as Maybe (fromMaybe)
 
 import qualified Hyahtzee2.Types as Types
   ( Figure
@@ -61,7 +63,42 @@ writeInLine figure value scoreCard =
   let line = FigureLine figure
   in case Map.lookup line scoreCard of
        Just _ -> Nothing -- error, there is already a number
-       Nothing -> Just $ Map.insert line value scoreCard
+       Nothing -> Just $ autocompleteLines $ Map.insert line value scoreCard
+
+autocompleteLines :: ScoreCard -> ScoreCard
+autocompleteLines scoreCard = foldl
+                              (\result function -> function result)
+                              scoreCard
+                              autocompleteFunctions
+
+autocompleteFunctions :: [ScoreCard -> ScoreCard]
+autocompleteFunctions = [autocompleteBonusLine, autocompleteTotalLine]
+
+autocompleteBonusLine :: ScoreCard -> ScoreCard
+autocompleteBonusLine scoreCard = if canFillBonusLine
+                                  then scoreCardWithBonusLine
+                                  else scoreCard
+  where
+    canFillBonusLine = bonusLineIsEmpty && allUpperFiguresHaveScore
+    bonusLineIsEmpty = not $ hasValueAtLine scoreCard UpperBonusLine
+    allUpperFiguresHaveScore = List.all (hasValueAtLine scoreCard) upperFigureLines
+    scoreCardWithBonusLine = Map.insert UpperBonusLine bonusValue scoreCard
+    bonusValue = if reachesThreshold then 35 else 0
+    reachesThreshold = sum upperFigureValues >= 63
+    upperFigureValues = map valueAtLineOr0 upperFigureLines
+    valueAtLineOr0 line = Maybe.fromMaybe 0 (valueAtLine scoreCard line)
+
+autocompleteTotalLine :: ScoreCard -> ScoreCard
+autocompleteTotalLine scoreCard = if canFillTotalLine
+                                  then scoreCardWithTotalLine
+                                  else scoreCard
+  where
+    canFillTotalLine = Map.size scoreCard == (numberOfLines - 1)
+    scoreCardWithTotalLine = Map.insert TotalLine totalValue scoreCard
+    totalValue = sum $ Map.elems scoreCard
+
+hasValueAtLine :: ScoreCard -> ScoreCardLine -> Bool
+hasValueAtLine scoreCard line = Map.member line scoreCard
 
 -- | Return the value associated with a line or Nothing.
 valueAtLine :: ScoreCard -> ScoreCardLine -> Maybe Int

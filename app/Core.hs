@@ -8,9 +8,10 @@ module Core
   , writeInBox
   , figureForLetter
   , letterForFigure
+  , allFigureLetters
   ) where
 
-import qualified Data.List as List (find, zip)
+import qualified Data.List as List (find, sort, zip)
 
 import qualified Hyahtzee2.Game as Game (Game, toggleDie, rethrow, writeInBox)
 
@@ -71,3 +72,6 @@ letterForFigure :: Types.Figure -> Char
 letterForFigure figure =
   let maybePair = List.find (\(figure',_) -> figure == figure') figuresAndLetters
   in maybe 'a' snd maybePair
+
+allFigureLetters :: [Char]
+allFigureLetters = List.sort $ map snd figuresAndLetters

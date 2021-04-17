@@ -13,7 +13,7 @@ module Hyahtzee2.Dice
 import qualified Text.Printf as Printf (printf)
 import qualified System.Random as Random (StdGen)
 import qualified Data.Bifunctor as Bifunctor (second)
-import qualified Data.List as List (intercalate)
+import qualified Data.List as List (intercalate, sort)
 
 import qualified Hyahtzee2.Util as Util (modifyNth, generateRandomValues)
 
@@ -88,4 +88,4 @@ unselectAll (Dice dice) = Dice $ map (Bifunctor.second (const False)) dice
 -- >>> values $ Dice [(1,True),(5,False),(6,True)]
 -- [1,5,6]
 values :: Dice -> [Int]
-values (Dice dice) = map fst dice
+values (Dice dice) = List.sort $ map fst dice

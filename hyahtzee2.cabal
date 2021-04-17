@@ -69,6 +69,7 @@ test-suite test
   main-is:
     test.hs
   other-modules:
+    ScoreTests
     UtilTests
 
   build-depends:

@@ -3,7 +3,7 @@ module Events (appEvent) where
 import qualified Brick (BrickEvent, BrickEvent(VtyEvent), EventM, Next, halt, continue)
 import qualified Graphics.Vty as Vty (Event(EvKey), Key(KChar))
 
-import qualified Core (GameUI, toggleDie, tryThrowingDice)
+import qualified Core (GameUI, toggleDie, tryThrowingDice, writeInBox, figureForLetter)
 
 -- | Handle a received event (usually a keyboard event) by returning a
 -- copy of the game received as argument.
@@ -16,4 +16,5 @@ appEvent game (Brick.VtyEvent (Vty.EvKey (Vty.KChar '3') [])) = Brick.continue $
 appEvent game (Brick.VtyEvent (Vty.EvKey (Vty.KChar '4') [])) = Brick.continue $ Core.toggleDie 3 game
 appEvent game (Brick.VtyEvent (Vty.EvKey (Vty.KChar '5') [])) = Brick.continue $ Core.toggleDie 4 game
 appEvent game (Brick.VtyEvent (Vty.EvKey (Vty.KChar '6') [])) = Brick.continue $ Core.toggleDie 5 game
+appEvent game (Brick.VtyEvent (Vty.EvKey (Vty.KChar letter) [])) = Brick.continue $ Core.writeInBox (Core.figureForLetter letter) game
 appEvent game _ = Brick.continue game

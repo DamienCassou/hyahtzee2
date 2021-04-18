@@ -9,7 +9,7 @@ import qualified Brick (
 
 import qualified Graphics.Vty as Vty (defAttr)
 
-import qualified System.Random as Random (mkStdGen)
+import qualified System.Random as Random (getStdGen)
 import qualified Control.Monad (void)
 
 import qualified Core (GameUI, newGameUI)
@@ -28,4 +28,4 @@ app =
               }
 
 main :: IO ()
-main = Control.Monad.void $ Brick.defaultMain app $ Core.newGameUI $ Game.newGame $ Random.mkStdGen 1
+main = Random.getStdGen >>= (Control.Monad.void . Brick.defaultMain app . Core.newGameUI . Game.newGame)

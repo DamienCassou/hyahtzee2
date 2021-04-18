@@ -19,9 +19,6 @@ import qualified Text.Printf as Printf (printf)
 
 import qualified Hyahtzee2.Dice as Dice (Dice, rethrow, toggleDie, values, throwDice, unselectAll)
 
--- $setup
--- >>> import System.Random (mkStdGen)
-
 data Round = Round {
   -- The number of times the user threw the dice (from 1 to 3)
   iteration :: Int
@@ -35,9 +32,6 @@ maxIteration :: Int
 maxIteration = 3
 
 -- | Distlay a round
---
--- >>> Round { iteration = 2, dice = fst (throwDice (mkStdGen 0)), randomGen = mkStdGen 0 }
--- [5, 1, 4, 6, 6] (throw 2/3)
 instance Show Round where
   show round' = Printf.printf "%s %s" (showDice round') (showIteration round')
 
@@ -51,31 +45,14 @@ setDice :: Round -> Dice.Dice -> Round
 setDice round' dice' = Round { iteration = iteration round', dice = dice', randomGen = randomGen round'}
 
 -- | Return true iff the round is not at its 3rd iteration yet
---
--- >>> canThrowDice $ Round { iteration = 1, dice = fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0 }
--- True
--- >>> canThrowDice $ Round { iteration = 2, dice = fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0 }
--- True
--- >>> canThrowDice $ Round { iteration = 3, dice = fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0 }
--- False
 canThrowDice :: Round -> Bool
 canThrowDice round' = iteration round' < maxIteration
 
 -- | Return true iff the round is not at its 3rd iteration yet
---
--- >>> isPenultimateRound $ Round { iteration = 1, dice = fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0 }
--- False
--- >>> isPenultimateRound $ Round { iteration = 2, dice = fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0 }
--- True
--- >>> isPenultimateRound $ Round { iteration = 3, dice = fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0 }
--- False
 isPenultimateRound :: Round -> Bool
 isPenultimateRound round' = iteration round' == maxIteration - 1
 
 -- | Create a new instance of Round, iteration at 1 and random dice
---
--- >>> newRound $ mkStdGen 0
--- [5, 1, 4, 6, 6] (throw 1/3)
 newRound :: Random.StdGen -> Round
 newRound randomGen' =
   let (dice', randomGen'') = Dice.throwDice randomGen' in
@@ -87,13 +64,6 @@ renewRound round' = newRound (randomGen round')
 -- | Throw all dice but selected ones. Returns `Nothing` if round is
 -- at iteration 3 already. After throwing dice, if it is not possible
 -- to throw dice again, unselect all dice.
---
--- >>> Round.rethrow (Round {iteration = 1, dice = Dice.toggleDie 1 $ fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0})
--- Just [[1], 1, 4, 6, 6] (throw 2/3)
--- >>> Round.rethrow (Round {iteration = 2, dice = Dice.toggleDie 1 $ fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0})
--- Just [1, 1, 4, 6, 6] (throw 3/3)
--- >>> Round.rethrow (Round {iteration = 3, dice = Dice.toggleDie 1 $ fst $ throwDice $ mkStdGen 0, randomGen = mkStdGen 0})
--- Nothing
 rethrow :: Round -> Maybe Round
 rethrow round'
   | not (canThrowDice round') = Nothing
@@ -108,11 +78,6 @@ rethrow round'
       randomGen = randomGen'}
 
 -- | Select or unselect the die at given index.
---
--- >>> Round.toggleDie 1 (newRound $ mkStdGen 0)
--- [5, [1], 4, 6, 6] (throw 1/3)
--- >>> Round.toggleDie 3 (newRound $ mkStdGen 0)
--- [5, 1, 4, [6], 6] (throw 1/3)
 toggleDie :: Int -> Round -> Round
 toggleDie index round' = setDice round' $ Dice.toggleDie index (dice round')
 

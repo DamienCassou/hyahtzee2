@@ -72,3 +72,5 @@ jobs:
       - run: cabal new-build --only-dependencies
       - run: cabal new-build
       - run: cabal new-test --test-show-details=direct
+      - name: Detect dead-code
+        run: cabal install weeder && ~/.cabal/bin/weeder

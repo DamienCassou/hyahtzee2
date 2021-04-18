@@ -63,39 +63,43 @@ writeInLine figure value scoreCard =
   let line = FigureLine figure
   in case Map.lookup line scoreCard of
        Just _ -> Nothing -- error, there is already a number
-       Nothing -> Just $ autocompleteLines $ Map.insert line value scoreCard
+       Nothing -> Just $ autoFillLines $ Map.insert line value scoreCard
 
-autocompleteLines :: ScoreCard -> ScoreCard
-autocompleteLines scoreCard = foldl
+autoFillLines :: ScoreCard -> ScoreCard
+autoFillLines scoreCard = foldl
                               (\result function -> function result)
                               scoreCard
-                              autocompleteFunctions
+                              autoFillFunctions
 
-autocompleteFunctions :: [ScoreCard -> ScoreCard]
-autocompleteFunctions = [autocompleteBonusLine, autocompleteTotalLine]
+autoFillFunctions :: [ScoreCard -> ScoreCard]
+autoFillFunctions = [ makeAutoFillFunction canBonusLineBeFilled UpperBonusLine computeBonusLineValue
+                    , makeAutoFillFunction canTotalLineBeFilled TotalLine computeTotalLineValue
+                    ]
 
-autocompleteBonusLine :: ScoreCard -> ScoreCard
-autocompleteBonusLine scoreCard = if canFillBonusLine
-                                  then scoreCardWithBonusLine
-                                  else scoreCard
+makeAutoFillFunction :: (ScoreCard -> Bool) -> ScoreCardLine -> (ScoreCard -> Int) -> ScoreCard -> ScoreCard
+makeAutoFillFunction canLineBeFilled scoreCardLine computeValue scoreCard =
+  if canLineBeFilled scoreCard
+  then Map.insert scoreCardLine (computeValue scoreCard) scoreCard
+  else scoreCard
+
+canBonusLineBeFilled :: ScoreCard -> Bool
+canBonusLineBeFilled scoreCard = bonusLineIsEmpty && allUpperFiguresHaveScore
   where
-    canFillBonusLine = bonusLineIsEmpty && allUpperFiguresHaveScore
     bonusLineIsEmpty = not $ hasValueAtLine scoreCard UpperBonusLine
     allUpperFiguresHaveScore = List.all (hasValueAtLine scoreCard) upperFigureLines
-    scoreCardWithBonusLine = Map.insert UpperBonusLine bonusValue scoreCard
-    bonusValue = if reachesThreshold then 35 else 0
+
+computeBonusLineValue :: ScoreCard -> Int
+computeBonusLineValue scoreCard = if reachesThreshold then 35 else 0
+  where
     reachesThreshold = sum upperFigureValues >= 63
     upperFigureValues = map valueAtLineOr0 upperFigureLines
     valueAtLineOr0 line = Maybe.fromMaybe 0 (valueAtLine scoreCard line)
 
-autocompleteTotalLine :: ScoreCard -> ScoreCard
-autocompleteTotalLine scoreCard = if canFillTotalLine
-                                  then scoreCardWithTotalLine
-                                  else scoreCard
-  where
-    canFillTotalLine = Map.size scoreCard == (numberOfLines - 1)
-    scoreCardWithTotalLine = Map.insert TotalLine totalValue scoreCard
-    totalValue = sum $ Map.elems scoreCard
+canTotalLineBeFilled :: ScoreCard -> Bool
+canTotalLineBeFilled scoreCard = Map.size scoreCard == (numberOfLines - 1)
+
+computeTotalLineValue :: ScoreCard -> Int
+computeTotalLineValue scoreCard = sum $ Map.elems scoreCard
 
 hasValueAtLine :: ScoreCard -> ScoreCardLine -> Bool
 hasValueAtLine scoreCard line = Map.member line scoreCard

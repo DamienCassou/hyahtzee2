@@ -63,19 +63,19 @@ writeInLine figure value scoreCard =
   let line = FigureLine figure
   in case Map.lookup line scoreCard of
        Just _ -> Nothing -- error, there is already a number
-       Nothing -> Just $ autocompleteLines $ Map.insert line value scoreCard
+       Nothing -> Just $ autoFillLines $ Map.insert line value scoreCard
 
-autocompleteLines :: ScoreCard -> ScoreCard
-autocompleteLines scoreCard = foldl
+autoFillLines :: ScoreCard -> ScoreCard
+autoFillLines scoreCard = foldl
                               (\result function -> function result)
                               scoreCard
-                              autocompleteFunctions
+                              autoFillFunctions
 
-autocompleteFunctions :: [ScoreCard -> ScoreCard]
-autocompleteFunctions = [autocompleteBonusLine, autocompleteTotalLine]
+autoFillFunctions :: [ScoreCard -> ScoreCard]
+autoFillFunctions = [autoFillBonusLine, autoFillTotalLine]
 
-autocompleteBonusLine :: ScoreCard -> ScoreCard
-autocompleteBonusLine scoreCard = if canFillBonusLine
+autoFillBonusLine :: ScoreCard -> ScoreCard
+autoFillBonusLine scoreCard = if canFillBonusLine
                                   then scoreCardWithBonusLine
                                   else scoreCard
   where
@@ -88,8 +88,8 @@ autocompleteBonusLine scoreCard = if canFillBonusLine
     upperFigureValues = map valueAtLineOr0 upperFigureLines
     valueAtLineOr0 line = Maybe.fromMaybe 0 (valueAtLine scoreCard line)
 
-autocompleteTotalLine :: ScoreCard -> ScoreCard
-autocompleteTotalLine scoreCard = if canFillTotalLine
+autoFillTotalLine :: ScoreCard -> ScoreCard
+autoFillTotalLine scoreCard = if canFillTotalLine
                                   then scoreCardWithTotalLine
                                   else scoreCard
   where

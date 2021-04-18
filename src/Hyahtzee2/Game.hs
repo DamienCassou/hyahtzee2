@@ -1,4 +1,5 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE DerivingStrategies #-}
 
 module Hyahtzee2.Game
   ( Game
@@ -14,7 +15,7 @@ module Hyahtzee2.Game
   , canThrowDice
   ) where
 
-import Prelude hiding (round)
+import Prelude (Show, Bool, Int, Maybe(Just, Nothing), ($), (&&), not)
 import qualified System.Random as Random (StdGen)
 
 import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, setDice, dice, canThrowDice)
@@ -24,7 +25,7 @@ import qualified Hyahtzee2.Score as Score (score)
 import qualified Hyahtzee2.Dice as Dice (Dice)
 
 data Game = Game { round :: Round.Round, scoreCard :: ScoreCard.ScoreCard }
-  deriving Show
+  deriving stock Show
 
 newGame :: Random.StdGen -> Game
 newGame randomGen = Game { round = Round.newRound randomGen,

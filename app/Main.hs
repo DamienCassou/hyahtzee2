@@ -1,4 +1,6 @@
-module Main where
+{-# LANGUAGE Unsafe #-}
+
+module Main (main) where
 
 import qualified Brick (
   App, App(..),

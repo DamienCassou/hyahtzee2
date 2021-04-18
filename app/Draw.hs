@@ -1,6 +1,8 @@
+{-# LANGUAGE Unsafe #-}
+
 module Draw (drawUI, Name) where
 
-import Prelude hiding (round)
+import Prelude (String, ($), maybe, (++), show, map, not, head, last)
 import qualified Text.Printf as Printf (printf)
 
 import qualified Brick (Widget, Padding(Pad))
@@ -39,7 +41,7 @@ drawScoreCardLineName line = BrickC.str $ "   " ++ show line
 drawScoreCardLine :: ScoreCard.ScoreCard -> ScoreCard.ScoreCardLine -> [Brick.Widget Name]
 drawScoreCardLine scoreCard line = [drawScoreCardLineName line, drawScoreCardLineValue]
   where
-    drawScoreCardLineValue = BrickC.str $ lineValue scoreCard line
+    drawScoreCardLineValue = BrickC.str $ lineValue scoreCard line :: Brick.Widget Name
 
 drawScoreCard :: ScoreCard.ScoreCard -> Brick.Widget Name
 drawScoreCard scoreCard = BrickT.renderTable $ BrickT.table $ map (drawScoreCardLine scoreCard) ScoreCard.allLines
@@ -61,7 +63,7 @@ drawHelp gameUI =
            (head Core.allFigureLetters)
            (last Core.allFigureLetters)
       else ""
-    body = BrickC.str $ whenCanThrow ++ whenCanWrite ++ "- Press 'q' to quit\n"
+    body = BrickC.str $ whenCanThrow ++ whenCanWrite ++ "- Press 'q' to quit\n" :: Brick.Widget Name
   in BrickC.padTop (Brick.Pad 1) $ BrickB.borderWithLabel (BrickC.str "Help") body
 
 

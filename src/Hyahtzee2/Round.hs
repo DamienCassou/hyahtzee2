@@ -9,8 +9,6 @@ module Hyahtzee2.Round
   , rethrow
   , values
   , renewRound
-  , setDice
-  , dice
   , canThrowDice
   ) where
 

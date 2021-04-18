@@ -10,19 +10,16 @@ module Hyahtzee2.Game
   , rethrow
   , writeInLine
   , isFinished
-  , setDice
-  , dice
   , canThrowDice
   ) where
 
 import Prelude (Show, Bool, Int, Maybe(Just, Nothing), ($), (&&), not)
 import qualified System.Random as Random (StdGen)
 
-import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, setDice, dice, canThrowDice)
+import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, canThrowDice)
 import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, newScoreCard, writeInLine, isFinished)
 import qualified Hyahtzee2.Types as Types (Figure)
 import qualified Hyahtzee2.Score as Score (score)
-import qualified Hyahtzee2.Dice as Dice (Dice)
 
 data Game = Game { round :: Round.Round, scoreCard :: ScoreCard.ScoreCard }
   deriving stock Show
@@ -34,13 +31,6 @@ newGame randomGen = Game { round = Round.newRound randomGen,
 -- | Return a new game by copying the one passed as parameter and changing its round.
 setRound :: Game -> Round.Round -> Game
 setRound game round' = Game { round = round', scoreCard = scoreCard game}
-
--- | Return a new game by copying the one passed as parameter and changing its dice.
-setDice :: Game -> Dice.Dice -> Game
-setDice game dice' = Game { round = Round.setDice (round game) dice', scoreCard = scoreCard game}
-
-dice :: Game -> Dice.Dice
-dice game = Round.dice $ round game
 
 canThrowDice :: Game -> Bool
 canThrowDice game = gameIsNotFinished && roundCanThrowDice

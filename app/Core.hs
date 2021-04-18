@@ -4,7 +4,6 @@ module Core
   ( GameUI
   , newGameUI
   , game
-  , throwDice
   , toggleDie
   , tryThrowingDice
   , writeInLine
@@ -33,15 +32,6 @@ toggleDie :: Int -> GameUI -> GameUI
 toggleDie index gameUI =
   let game' = Game.toggleDie index $ game gameUI
   in GameUI {game = game'}
-
--- | Shuffle all unselected dice.
-throwDice :: GameUI -> GameUI
-throwDice gameUI =
-  let
-    game' = game gameUI
-    maybeGame = Game.rethrow game'
-  in
-    maybe gameUI GameUI maybeGame
 
 -- | Throw dice if it is still possible. Otherwise do nothing.
 tryThrowingDice :: GameUI -> GameUI

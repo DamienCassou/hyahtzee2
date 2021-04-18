@@ -42,7 +42,10 @@ dice :: Game -> Dice.Dice
 dice game = Round.dice $ round game
 
 canThrowDice :: Game -> Bool
-canThrowDice game = Round.canThrowDice $ round game
+canThrowDice game = gameIsNotFinished && roundCanThrowDice
+  where
+    gameIsNotFinished = not (isFinished game)
+    roundCanThrowDice = Round.canThrowDice $ round game
 
 -- | Toggle selection of a die at a particular index.
 toggleDie :: Int -> Game -> Game

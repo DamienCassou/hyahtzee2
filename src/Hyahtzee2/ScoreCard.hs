@@ -1,4 +1,5 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE DerivingStrategies #-}
 
 module Hyahtzee2.ScoreCard
   ( newScoreCard
@@ -25,7 +26,7 @@ data ScoreCardLine
   = FigureLine Types.Figure
   | UpperBonusLine
   | TotalLine
-  deriving (Ord, Eq)
+  deriving stock (Ord, Eq)
 
 instance Show ScoreCardLine where
   show (FigureLine figure) = show figure

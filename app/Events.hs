@@ -1,3 +1,5 @@
+{-# LANGUAGE Unsafe #-}
+
 module Events (appEvent) where
 
 import qualified Brick (BrickEvent, BrickEvent(VtyEvent), EventM, Next, halt, continue)

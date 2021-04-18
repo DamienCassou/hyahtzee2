@@ -2,7 +2,7 @@
 
 module Hyahtzee2.Score (score) where
 
-import Data.List (isSubsequenceOf)
+import qualified Data.List as List (isSubsequenceOf)
 
 import qualified Hyahtzee2.Types as Types
   ( Figure (UFigure, LFigure)
@@ -113,7 +113,7 @@ scoreFullHouse [d1, d2, d3, d4, d5]
 scoreFullHouse _ = 0
 
 scoreStraight :: Throw -> [[Int]] -> Bool
-scoreStraight throw = any (`isSubsequenceOf` throw)
+scoreStraight throw = any (`List.isSubsequenceOf` throw)
 
 -- | Count small-straight score with provided dice
 --

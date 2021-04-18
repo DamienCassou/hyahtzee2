@@ -72,30 +72,34 @@ autoFillLines scoreCard = foldl
                               autoFillFunctions
 
 autoFillFunctions :: [ScoreCard -> ScoreCard]
-autoFillFunctions = [autoFillBonusLine, autoFillTotalLine]
+autoFillFunctions = [ makeAutoFillFunction canBonusLineBeFilled UpperBonusLine computeBonusLineValue
+                    , makeAutoFillFunction canTotalLineBeFilled TotalLine computeTotalLineValue
+                    ]
 
-autoFillBonusLine :: ScoreCard -> ScoreCard
-autoFillBonusLine scoreCard = if canFillBonusLine
-                                  then scoreCardWithBonusLine
-                                  else scoreCard
+makeAutoFillFunction :: (ScoreCard -> Bool) -> ScoreCardLine -> (ScoreCard -> Int) -> ScoreCard -> ScoreCard
+makeAutoFillFunction canLineBeFilled scoreCardLine computeValue scoreCard =
+  if canLineBeFilled scoreCard
+  then Map.insert scoreCardLine (computeValue scoreCard) scoreCard
+  else scoreCard
+
+canBonusLineBeFilled :: ScoreCard -> Bool
+canBonusLineBeFilled scoreCard = bonusLineIsEmpty && allUpperFiguresHaveScore
   where
-    canFillBonusLine = bonusLineIsEmpty && allUpperFiguresHaveScore
     bonusLineIsEmpty = not $ hasValueAtLine scoreCard UpperBonusLine
     allUpperFiguresHaveScore = List.all (hasValueAtLine scoreCard) upperFigureLines
-    scoreCardWithBonusLine = Map.insert UpperBonusLine bonusValue scoreCard
-    bonusValue = if reachesThreshold then 35 else 0
+
+computeBonusLineValue :: ScoreCard -> Int
+computeBonusLineValue scoreCard = if reachesThreshold then 35 else 0
+  where
     reachesThreshold = sum upperFigureValues >= 63
     upperFigureValues = map valueAtLineOr0 upperFigureLines
     valueAtLineOr0 line = Maybe.fromMaybe 0 (valueAtLine scoreCard line)
 
-autoFillTotalLine :: ScoreCard -> ScoreCard
-autoFillTotalLine scoreCard = if canFillTotalLine
-                                  then scoreCardWithTotalLine
-                                  else scoreCard
-  where
-    canFillTotalLine = Map.size scoreCard == (numberOfLines - 1)
-    scoreCardWithTotalLine = Map.insert TotalLine totalValue scoreCard
-    totalValue = sum $ Map.elems scoreCard
+canTotalLineBeFilled :: ScoreCard -> Bool
+canTotalLineBeFilled scoreCard = Map.size scoreCard == (numberOfLines - 1)
+
+computeTotalLineValue :: ScoreCard -> Int
+computeTotalLineValue scoreCard = sum $ Map.elems scoreCard
 
 hasValueAtLine :: ScoreCard -> ScoreCardLine -> Bool
 hasValueAtLine scoreCard line = Map.member line scoreCard

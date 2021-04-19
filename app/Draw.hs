@@ -65,7 +65,7 @@ drawHelp gameUI =
               (head Core.allFigureLetters)
               (last Core.allFigureLetters)
           else ""
-      body = BrickC.str $ whenCanThrow ++ whenCanWrite ++ "- Press 'q' to quit\n" :: Brick.Widget Name
+      body = BrickC.str $ whenCanThrow ++ whenCanWrite ++ "- Press `q` to quit\n" :: Brick.Widget Name
    in BrickC.padTop (Brick.Pad 1) $ BrickB.borderWithLabel (BrickC.str "Help") body
 
 drawUI :: Core.GameUI -> [Brick.Widget Name]

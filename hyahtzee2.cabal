@@ -43,11 +43,11 @@ library
   hs-source-dirs:  src
   exposed-modules:
     Hyahtzee2.Dice
+    Hyahtzee2.Figure
     Hyahtzee2.Game
     Hyahtzee2.Round
     Hyahtzee2.Score
     Hyahtzee2.ScoreCard
-    Hyahtzee2.Types
     Hyahtzee2.Util
 
   build-depends:

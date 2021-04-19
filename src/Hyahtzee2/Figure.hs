@@ -1,9 +1,7 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE DerivingStrategies #-}
 
--- TODO : rename this file to Figure.hs
-
-module Hyahtzee2.Types
+module Hyahtzee2.Figure
   ( UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
   , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
   , Figure(UFigure, LFigure)

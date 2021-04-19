@@ -10,6 +10,7 @@ hsPkgs.shellFor {
     cabal = "latest";
     haskell-language-server = "latest";
     hlint = "latest";
+    ormolu = "latest";
     weeder = "latest";
   };
   exactDeps = true;

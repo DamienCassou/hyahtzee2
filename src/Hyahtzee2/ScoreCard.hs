@@ -1,25 +1,24 @@
-{-# LANGUAGE Safe #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE Safe #-}
 
 module Hyahtzee2.ScoreCard
-  ( newScoreCard
-  , ScoreCard
-  , ScoreCardLine(FigureLine, UpperBonusLine, TotalLine)
-  , allLines
-  , valueAtLine
-  , isFinished
-  , writeInLine
-  ) where
+  ( newScoreCard,
+    ScoreCard,
+    ScoreCardLine (FigureLine, UpperBonusLine, TotalLine),
+    allLines,
+    valueAtLine,
+    isFinished,
+    writeInLine,
+  )
+where
 
 import qualified Data.List as List (all)
-import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size, member, elems)
+import qualified Data.Map as Map (Map, elems, empty, insert, lookup, member, size, (!?))
 import qualified Data.Maybe as Maybe (fromMaybe)
-
 import qualified Hyahtzee2.Figure as Figure
-  ( Figure
-  , UpperFigure
-  , LowerFigure
-  , Figure ( UFigure, LFigure )
+  ( Figure (LFigure, UFigure),
+    LowerFigure,
+    UpperFigure,
   )
 
 data ScoreCardLine
@@ -45,8 +44,8 @@ upperFigureLines = map (FigureLine . Figure.UFigure) upperFigures
 lowerFigureLines :: [ScoreCardLine]
 lowerFigureLines = map (FigureLine . Figure.LFigure) lowerFigures
 
-allLines :: [ ScoreCardLine ]
-allLines = upperFigureLines ++ [ UpperBonusLine ] ++ lowerFigureLines ++ [ TotalLine ]
+allLines :: [ScoreCardLine]
+allLines = upperFigureLines ++ [UpperBonusLine] ++ lowerFigureLines ++ [TotalLine]
 
 numberOfLines :: Int
 numberOfLines = length allLines
@@ -62,26 +61,28 @@ newScoreCard = Map.empty
 writeInLine :: Figure.Figure -> Int -> ScoreCard -> Maybe ScoreCard
 writeInLine figure value scoreCard =
   let line = FigureLine figure
-  in case Map.lookup line scoreCard of
-       Just _ -> Nothing -- error, there is already a number
-       Nothing -> Just $ autoFillLines $ Map.insert line value scoreCard
+   in case Map.lookup line scoreCard of
+        Just _ -> Nothing -- error, there is already a number
+        Nothing -> Just $ autoFillLines $ Map.insert line value scoreCard
 
 autoFillLines :: ScoreCard -> ScoreCard
-autoFillLines scoreCard = foldl
-                              (\result function -> function result)
-                              scoreCard
-                              autoFillFunctions
+autoFillLines scoreCard =
+  foldl
+    (\result function -> function result)
+    scoreCard
+    autoFillFunctions
 
 autoFillFunctions :: [ScoreCard -> ScoreCard]
-autoFillFunctions = [ makeAutoFillFunction canBonusLineBeFilled UpperBonusLine computeBonusLineValue
-                    , makeAutoFillFunction canTotalLineBeFilled TotalLine computeTotalLineValue
-                    ]
+autoFillFunctions =
+  [ makeAutoFillFunction canBonusLineBeFilled UpperBonusLine computeBonusLineValue,
+    makeAutoFillFunction canTotalLineBeFilled TotalLine computeTotalLineValue
+  ]
 
 makeAutoFillFunction :: (ScoreCard -> Bool) -> ScoreCardLine -> (ScoreCard -> Int) -> ScoreCard -> ScoreCard
 makeAutoFillFunction canLineBeFilled scoreCardLine computeValue scoreCard =
   if canLineBeFilled scoreCard
-  then Map.insert scoreCardLine (computeValue scoreCard) scoreCard
-  else scoreCard
+    then Map.insert scoreCardLine (computeValue scoreCard) scoreCard
+    else scoreCard
 
 canBonusLineBeFilled :: ScoreCard -> Bool
 canBonusLineBeFilled scoreCard = bonusLineIsEmpty && allUpperFiguresHaveScore

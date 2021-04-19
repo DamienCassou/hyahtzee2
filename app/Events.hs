@@ -2,10 +2,9 @@
 
 module Events (appEvent) where
 
-import qualified Brick (BrickEvent, BrickEvent(VtyEvent), EventM, Next, halt, continue)
-import qualified Graphics.Vty as Vty (Event(EvKey), Key(KChar))
-
-import qualified Core (GameUI, toggleDie, tryThrowingDice, writeInLine, figureForLetter)
+import qualified Brick (BrickEvent (VtyEvent), EventM, Next, continue, halt)
+import qualified Core (GameUI, figureForLetter, toggleDie, tryThrowingDice, writeInLine)
+import qualified Graphics.Vty as Vty (Event (EvKey), Key (KChar))
 
 -- | Handle a received event (usually a keyboard event) by returning a
 -- copy of the game received as argument.

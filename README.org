@@ -1,3 +1,53 @@
 * hyahtzee2
 
 [[https://github.com/DamienCassou/hyahtzee2/actions][file:https://github.com/DamienCassou/hyahtzee2/workflows/test/badge.svg]]
+
+Famous [[https://en.wikipedia.org/wiki/Yahtzee][Yahtzee dice game]]. The game runs in a terminal and is driven by
+the keyboard:
+
+[[file:media/screenshot.png]]
+
+The left part of the game is the scorecard in which a score is written
+for each of the 13 categories. The "Bonus" and "Total" lines are
+filled automatically when all lines above are filled.
+
+On the top, the current die throw is visible. The title "throw 2/3"
+means that 2 throws have been done for a total of 3 allowed before
+having to score a category. In the same box, the numbers represent the
+values (from 1 to 6) of the five dice. The dice the user wants to keep
+(i.e., not throw again) are wrapped in square brackets.
+
+Finally, the "Help" box gives information about the available
+shortcuts. The content of this box changes based on the context.
+
+Scoring rules are the same as in [[https://en.wikipedia.org/wiki/Yahtzee][the Wikipedia page for Yahtzee]] except
+that "Yahtzee bonuses and Joker rules" are not implemented.
+
+** Installation
+
+If you have [[https://nixos.org/][Nix]] installed (which is a good idea
+anyway), I suggest using it to install hyahtzee2. Otherwise, you can
+use [[https://www.haskell.org/cabal/][Cabal]].
+
+** With Nix
+If you have [[https://nixos.org/][Nix]] installed, ~cd~ to a [[https://git-scm.com/][git]] clone of the game and do:
+
+#+begin_src text
+  ~/projects/hyahtzee2 $ nix-build -A hsPkgs.hyahtzee2.components.exes.hyahtzee2-exe pkgs.nix
+  […]
+  ~/projects/hyahtzee2 $ ./result/bin/hyahtzee2-exe
+#+end_src
+
+
+** With Cabal
+
+If you don't have Nix installed or if the previous installation method
+failed, you can [[https://www.haskell.org/cabal/][install Cabal]], ~cd~ to a [[https://git-scm.com/][git]] clone of the game and do:
+
+#+begin_src text
+  ~/projects/hyahtzee2 $ cabal new-run hyahtzee2-exe
+#+end_src
+
+* Contributing
+
+See [[file:CONTRIBUTING.org][CONTRIBUTING.org]].

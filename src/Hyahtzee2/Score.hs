@@ -3,14 +3,14 @@
 module Hyahtzee2.Score (score) where
 
 import qualified Data.List as List (isSubsequenceOf)
-
 import qualified Hyahtzee2.Figure as Figure
-  ( Figure (UFigure, LFigure)
-  , UpperFigure (Aces, Twos, Threes, Fours, Fives, Sixes)
-  , LowerFigure (ThreeOfAKind, FourOfAKind, SmallStraight, LargeStraight, FullHouse, Yahtzee, Chance)
+  ( Figure (LFigure, UFigure),
+    LowerFigure (Chance, FourOfAKind, FullHouse, LargeStraight, SmallStraight, ThreeOfAKind, Yahtzee),
+    UpperFigure (Aces, Fives, Fours, Sixes, Threes, Twos),
   )
 
 type Throw = [Int]
+
 type Scoring = Throw -> Int
 
 -- | Returns a count of the number of times the given element occured

@@ -1,36 +1,39 @@
-{-# LANGUAGE Safe #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE Safe #-}
 
 module Hyahtzee2.Game
-  ( Game
-  , newGame
-  , scoreCard
-  , round
-  , toggleDie
-  , rethrow
-  , writeInLine
-  , isFinished
-  , canThrowDice
-  ) where
+  ( Game,
+    newGame,
+    scoreCard,
+    round,
+    toggleDie,
+    rethrow,
+    writeInLine,
+    isFinished,
+    canThrowDice,
+  )
+where
 
-import Prelude (Show, Bool, Int, Maybe(Just, Nothing), ($), (&&), not)
-import qualified System.Random as Random (StdGen)
-
-import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, canThrowDice)
-import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, newScoreCard, writeInLine, isFinished)
 import qualified Hyahtzee2.Figure as Figure (Figure)
+import qualified Hyahtzee2.Round as Round (Round, canThrowDice, newRound, renewRound, rethrow, toggleDie, values)
 import qualified Hyahtzee2.Score as Score (score)
+import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, isFinished, newScoreCard, writeInLine)
+import qualified System.Random as Random (StdGen)
+import Prelude (Bool, Int, Maybe (Just, Nothing), Show, not, ($), (&&))
 
-data Game = Game { round :: Round.Round, scoreCard :: ScoreCard.ScoreCard }
-  deriving stock Show
+data Game = Game {round :: Round.Round, scoreCard :: ScoreCard.ScoreCard}
+  deriving stock (Show)
 
 newGame :: Random.StdGen -> Game
-newGame randomGen = Game { round = Round.newRound randomGen,
-                           scoreCard = ScoreCard.newScoreCard }
+newGame randomGen =
+  Game
+    { round = Round.newRound randomGen,
+      scoreCard = ScoreCard.newScoreCard
+    }
 
 -- | Return a new game by copying the one passed as parameter and changing its round.
 setRound :: Game -> Round.Round -> Game
-setRound game round' = Game { round = round', scoreCard = scoreCard game}
+setRound game round' = Game {round = round', scoreCard = scoreCard game}
 
 canThrowDice :: Game -> Bool
 canThrowDice game = gameIsNotFinished && roundCanThrowDice
@@ -50,9 +53,10 @@ rethrow game = case Round.rethrow (round game) of
 
 writeInLine :: Figure.Figure -> Game -> Maybe Game
 writeInLine figure game = case ScoreCard.writeInLine figure value (scoreCard game) of
-  Just scoreCard' -> Just $ Game { round = Round.renewRound (round game), scoreCard = scoreCard' }
+  Just scoreCard' -> Just $ Game {round = Round.renewRound (round game), scoreCard = scoreCard'}
   Nothing -> Nothing
-  where value = Score.score figure $ Round.values (round game)
+  where
+    value = Score.score figure $ Round.values (round game)
 
 isFinished :: Game -> Bool
 isFinished game = ScoreCard.isFinished $ scoreCard game

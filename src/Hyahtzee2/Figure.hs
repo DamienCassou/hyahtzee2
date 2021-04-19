@@ -1,11 +1,12 @@
-{-# LANGUAGE Safe #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE Safe #-}
 
 module Hyahtzee2.Figure
-  ( UpperFigure(Aces, Twos, Threes, Fours, Fives, Sixes)
-  , LowerFigure(ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance)
-  , Figure(UFigure, LFigure)
-  ) where
+  ( UpperFigure (Aces, Twos, Threes, Fours, Fives, Sixes),
+    LowerFigure (ThreeOfAKind, FourOfAKind, FullHouse, SmallStraight, LargeStraight, Yahtzee, Chance),
+    Figure (UFigure, LFigure),
+  )
+where
 
 data UpperFigure = Aces | Twos | Threes | Fours | Fives | Sixes
   deriving stock (Eq, Show, Ord, Enum, Bounded)

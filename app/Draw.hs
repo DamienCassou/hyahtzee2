@@ -55,7 +55,7 @@ drawHelp :: Core.GameUI -> Brick.Widget Name
 drawHelp gameUI =
   let whenCanThrow =
         if Game.canThrowDice (Core.game gameUI)
-          then "- Press `t` to throw dice again\n" ++ "- Press `1`-`6` to toogle die selection\n"
+          then "- Press `t` to throw dice again\n" ++ "- Press `1`-`5` to toogle die selection\n"
           else ""
       whenCanWrite =
         if not $ Game.isFinished (Core.game gameUI)

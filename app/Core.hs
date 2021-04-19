@@ -16,7 +16,7 @@ import qualified Data.List as List (find, sort, zip)
 
 import qualified Hyahtzee2.Game as Game (Game, toggleDie, rethrow, writeInLine)
 
-import qualified Hyahtzee2.Types as Types
+import qualified Hyahtzee2.Figure as Figure
   ( Figure ( UFigure, LFigure )
   , UpperFigure(Aces)
   , LowerFigure
@@ -41,7 +41,7 @@ tryThrowingDice gameUI =
     Nothing -> gameUI
     Just game' -> GameUI {game = game'}
 
-writeInLine :: Types.Figure -> GameUI -> GameUI
+writeInLine :: Figure.Figure -> GameUI -> GameUI
 writeInLine figure gameUI =
   let
     game' = game gameUI
@@ -49,18 +49,18 @@ writeInLine figure gameUI =
   in
     maybe gameUI GameUI maybeGame
 
-figuresAndLetters :: [(Types.Figure, Char)]
+figuresAndLetters :: [(Figure.Figure, Char)]
 figuresAndLetters = List.zip allFigures ['a'..'z']
   where allFigures = upperFigures ++ lowerFigures
-        upperFigures = map Types.UFigure ([minBound .. maxBound] :: [Types.UpperFigure])
-        lowerFigures = map Types.LFigure ([minBound .. maxBound] :: [Types.LowerFigure])
+        upperFigures = map Figure.UFigure ([minBound .. maxBound] :: [Figure.UpperFigure])
+        lowerFigures = map Figure.LFigure ([minBound .. maxBound] :: [Figure.LowerFigure])
 
-figureForLetter :: Char -> Types.Figure
+figureForLetter :: Char -> Figure.Figure
 figureForLetter letter =
   let maybePair = List.find (\(_,char) -> char == letter) figuresAndLetters
-  in maybe (Types.UFigure Types.Aces) fst maybePair
+  in maybe (Figure.UFigure Figure.Aces) fst maybePair
 
-letterForFigure :: Types.Figure -> Char
+letterForFigure :: Figure.Figure -> Char
 letterForFigure figure =
   let maybePair = List.find (\(figure',_) -> figure == figure') figuresAndLetters
   in maybe 'a' snd maybePair

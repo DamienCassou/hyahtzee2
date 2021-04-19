@@ -18,7 +18,7 @@ import qualified System.Random as Random (StdGen)
 
 import qualified Hyahtzee2.Round as Round (Round, newRound, renewRound, toggleDie, rethrow, values, canThrowDice)
 import qualified Hyahtzee2.ScoreCard as ScoreCard (ScoreCard, newScoreCard, writeInLine, isFinished)
-import qualified Hyahtzee2.Types as Types (Figure)
+import qualified Hyahtzee2.Figure as Figure (Figure)
 import qualified Hyahtzee2.Score as Score (score)
 
 data Game = Game { round :: Round.Round, scoreCard :: ScoreCard.ScoreCard }
@@ -48,7 +48,7 @@ rethrow game = case Round.rethrow (round game) of
   Just round' -> Just $ setRound game round'
   Nothing -> Nothing
 
-writeInLine :: Types.Figure -> Game -> Maybe Game
+writeInLine :: Figure.Figure -> Game -> Maybe Game
 writeInLine figure game = case ScoreCard.writeInLine figure value (scoreCard game) of
   Just scoreCard' -> Just $ Game { round = Round.renewRound (round game), scoreCard = scoreCard' }
   Nothing -> Nothing

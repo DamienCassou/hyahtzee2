@@ -15,7 +15,7 @@ import qualified Data.List as List (all)
 import qualified Data.Map as Map (Map, empty, lookup, insert, (!?), size, member, elems)
 import qualified Data.Maybe as Maybe (fromMaybe)
 
-import qualified Hyahtzee2.Types as Types
+import qualified Hyahtzee2.Figure as Figure
   ( Figure
   , UpperFigure
   , LowerFigure
@@ -23,7 +23,7 @@ import qualified Hyahtzee2.Types as Types
   )
 
 data ScoreCardLine
-  = FigureLine Types.Figure
+  = FigureLine Figure.Figure
   | UpperBonusLine
   | TotalLine
   deriving stock (Ord, Eq)
@@ -33,17 +33,17 @@ instance Show ScoreCardLine where
   show UpperBonusLine = "Bonus"
   show TotalLine = "Total"
 
-upperFigures :: [Types.UpperFigure]
+upperFigures :: [Figure.UpperFigure]
 upperFigures = [minBound .. maxBound]
 
-lowerFigures :: [Types.LowerFigure]
+lowerFigures :: [Figure.LowerFigure]
 lowerFigures = [minBound .. maxBound]
 
 upperFigureLines :: [ScoreCardLine]
-upperFigureLines = map (FigureLine . Types.UFigure) upperFigures
+upperFigureLines = map (FigureLine . Figure.UFigure) upperFigures
 
 lowerFigureLines :: [ScoreCardLine]
-lowerFigureLines = map (FigureLine . Types.LFigure) lowerFigures
+lowerFigureLines = map (FigureLine . Figure.LFigure) lowerFigures
 
 allLines :: [ ScoreCardLine ]
 allLines = upperFigureLines ++ [ UpperBonusLine ] ++ lowerFigureLines ++ [ TotalLine ]
@@ -59,7 +59,7 @@ newScoreCard = Map.empty
 
 -- | Return a score card after writing a score for a figure. If a
 -- score has already been written for this figure, return Nothing.
-writeInLine :: Types.Figure -> Int -> ScoreCard -> Maybe ScoreCard
+writeInLine :: Figure.Figure -> Int -> ScoreCard -> Maybe ScoreCard
 writeInLine figure value scoreCard =
   let line = FigureLine figure
   in case Map.lookup line scoreCard of

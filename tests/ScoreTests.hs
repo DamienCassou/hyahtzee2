@@ -3,7 +3,7 @@ module ScoreTests (tests) where
 import Test.Tasty
 import Test.Tasty.HUnit
 
-import Hyahtzee2.Types as Types
+import Hyahtzee2.Figure as Figure
   ( LowerFigure(SmallStraight)
   , Figure(LFigure)
   )

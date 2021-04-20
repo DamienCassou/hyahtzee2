@@ -1,1 +1,72 @@
-* Contributing to hyahtzee2's development
+* Contributing to hyahtzee2's Development
+
+This project is meant as an exercise to learn Haskell and I don't
+expect to receive contributions. Feel free to send PRs anyway if you
+want to and I will review them.
+
+** Infrastructure
+
+This project is built in Haskell with [[https://github.com/input-output-hk/haskell.nix][haskell.nix]]. The main structure
+of the project comes from [[https://github.com/jonascarpay/template-haskell/][template-haskell]]. [[file:.github/workflows/CI.yml][GitHub Actions is setup]] to
+build and test the project with [[https://nixos.org/][Nix]], [[https://www.haskell.org/cabal/][Cabal]] and [[https://www.haskellstack.org][Stack]].
+
+** Code
+
+Here is a diagram of the project's architecture:
+
+[[file:media/architecture.png]]
+
+An arrow going from module ~A~ (e.g., ~Game~) to module ~B~ (e.g.,
+~Round~) means that ~A~ imports some definitions from ~B~.
+
+The "Library" part on the right is implemented in the ~src/Hyahtzee2~
+directory. It is free of any IO monad. The code only depends on the
+~containers~ package and the prelude. 
+
+The "Application" part on the left is implemented in the ~app/~
+directory and depends on the library. The application also depends on
+[[https://hackage.haskell.org/package/brick][brick]], a declarative terminal user interface library.
+
+Each file is documented inline with Haddock. The following gives only
+a quick overview.
+
+*** The Library
+
+- ~Util.hs~ exports utility functions that have nothing to do with the
+  game domain.
+- ~Dice.hs~ exports the ~Dice~ type which stores the values of 5
+  dice and also which ones are currently selected; the module also
+  exports functions to manipulate (e.g., create, select and throw) a
+  ~Dice~ object.
+- ~Round.hs~ exports the ~Round~ type which stores a ~Dice~ object,
+  the current iteration (i.e., the user is allowed to throw the dice 3
+  times maximum) and a random number generator; the module also
+  exports functions to manipulate (e.g., create, select and throw) a
+  ~Round~ object.
+- ~Figure.hs~ only exports the ~Figure~, ~UpperFigure~ and
+  ~LowerFigure~ types that represent the 13 categories a user
+  writes scores to (e.g., ~Aces~ or ~Three-of-a-kind~).
+- ~Score.hs~ exports a single function that returns the score (an
+  integer) associated with a given figure and array of die values. For
+  example, ~[1, 2, 3, 4, 5]~ is worth a score of 1 in ~Aces~ category,
+  30 in ~Small Straight~, and 40 in ~Large Straight~.
+- ~ScoreCard.hs~ exports the ~ScoreCard~ type which is a map from a
+  ~ScoreCardLine~ (i.e., a figure line, the "Bonus" line or the
+  "Total" line) to the user's score for this line; the module also
+  exports functions to manipulate (e.g., create, write score, read
+  score) a ~ScoreCard~ object.
+- ~Game.hs~ exports the ~Game~ type which stores a ~Round~ and a
+  ~ScoreCard~; the module also exports functions to manipulate (e.g.,
+  create, select die, throw dice, write score) a ~Game~ object.
+
+*** The Application
+
+- ~Core.hs~ exports the ~GameUI~ type which stores a ~Game~ object;
+  the module also exports functions useful for the other modules.
+- ~Draw.hs~ exports the function responsible for drawing a ~GameUI~ on
+  the screen with the [[https://hackage.haskell.org/package/brick][brick]] library.
+- ~Events.hs~ exports the function responsible for handling keyboard
+  events; most events trigger the creation of a new ~GameUI~ from the
+  current one and continue the game.
+- ~Main.hs~ binds the other modules together and exports the ~main()~
+  function.

@@ -1,5 +1,9 @@
 {-# LANGUAGE Safe #-}
 
+-- |
+-- Description : Utility functions that have nothing to do with the game domain
+-- Copyright   : (c) Damien Cassou, 2021
+-- License     : BSD-3-Clause
 module Hyahtzee2.Util
   ( modifyNth,
     generateRandomValues,

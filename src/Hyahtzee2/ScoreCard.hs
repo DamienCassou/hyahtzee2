@@ -1,6 +1,10 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE Safe #-}
 
+-- |
+-- Description : The `ScoreCard` type mapping a `ScoreCardLine` to the user's score for this line
+-- Copyright   : (c) Damien Cassou, 2021
+-- License     : BSD-3-Clause
 module Hyahtzee2.ScoreCard
   ( newScoreCard,
     ScoreCard,
@@ -21,6 +25,11 @@ import qualified Hyahtzee2.Figure as Figure
     UpperFigure,
   )
 
+-- | Represents a line in the score card. The score for this line is
+-- stored in a `ScoreCard` object. The line is either filled manually
+-- by the user from its dice (the `FigureLine` constructor) or filled
+-- automatically by the game when the lines above are filled (the
+-- `UpperBonusLine` and `TotalLine` constructors).
 data ScoreCardLine
   = FigureLine Figure.Figure
   | UpperBonusLine
@@ -44,15 +53,18 @@ upperFigureLines = map (FigureLine . Figure.UFigure) upperFigures
 lowerFigureLines :: [ScoreCardLine]
 lowerFigureLines = map (FigureLine . Figure.LFigure) lowerFigures
 
+-- | A top-down list of all lines a score card contains. This includes
+-- the lines a user hasn't scored yet.
 allLines :: [ScoreCardLine]
 allLines = upperFigureLines ++ [UpperBonusLine] ++ lowerFigureLines ++ [TotalLine]
 
 numberOfLines :: Int
 numberOfLines = length allLines
 
+-- | Stores the user's score on a given line.
 type ScoreCard = Map.Map ScoreCardLine Int
 
--- | Return an empty score card
+-- | Return an empty `ScoreCard`.
 newScoreCard :: ScoreCard
 newScoreCard = Map.empty
 

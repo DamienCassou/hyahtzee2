@@ -1,6 +1,10 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE TupleSections #-}
 
+-- |
+-- Description : The `Dice` type storing 5 numbers (between 1 and 6) and the selection
+-- Copyright   : (c) Damien Cassou, 2021
+-- License     : BSD-3-Clause
 module Hyahtzee2.Dice
   ( Dice,
     throwDice,
@@ -22,7 +26,6 @@ import qualified Text.Printf as Printf (printf)
 -- is a boolean, with False, the default, indicating not selected.
 newtype Dice = Dice [(Int, Bool)]
 
--- | Display dice.
 instance Show Dice where
   show (Dice dice) =
     "["
@@ -52,6 +55,7 @@ toggleDie index (Dice values') = Dice $ Util.modifyNth index (Bifunctor.second n
 unselectAll :: Dice -> Dice
 unselectAll (Dice dice) = Dice $ map (Bifunctor.second (const False)) dice
 
--- | Return a sorted list of the value of all dice regardless of selection.
+-- | Return a sorted list of the value of every die regardless of
+-- selection.
 values :: Dice -> [Int]
 values (Dice dice) = List.sort $ map fst dice

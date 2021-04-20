@@ -1,5 +1,9 @@
 {-# LANGUAGE Safe #-}
 
+-- |
+-- Description : A function returning the score associated with a figure and an array of die values
+-- Copyright   : (c) Damien Cassou, 2021
+-- License     : BSD-3-Clause
 module Hyahtzee2.Score (score) where
 
 import qualified Data.List as List (isSubsequenceOf)
@@ -95,6 +99,10 @@ scoreYahtzee _ = 0
 scoreChance :: Scoring
 scoreChance = sum
 
+-- | Returns the score (an integer) associated with a given `Figure.Figure`
+-- and array of die values. For example, @[1, 2, 3, 4, 5]@ is worth a
+-- score of 1 in `Figure.Aces` category, 30 in `Figure.SmallStraight`, and 40 in
+-- `Figure.LargeStraight`.
 score :: Figure.Figure -> [Int] -> Int
 score (Figure.UFigure Figure.Aces) = scoreAces
 score (Figure.UFigure Figure.Twos) = scoreTwos

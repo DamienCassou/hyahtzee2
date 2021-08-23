@@ -27,7 +27,7 @@ jobs:
       - name: Run hlint
         run: nix-shell --run 'hlint .'
       - name: Check formatting
-        uses: mrkkrp/ormolu-action@v2
+        uses: mrkkrp/ormolu-action@v3
 
   stack-build:
     name: Stack ${{ matrix.resolver }} on ${{ matrix.os }} (${{ matrix.required }})
